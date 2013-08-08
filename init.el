@@ -11,21 +11,27 @@
  
 (add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
 
-
+;;;; Font
+(when window-system
+	(set-face-attribute 'default nil :font "Terminus:pixelsize=18:foundry=xos4:weight=normal:slant=normal:width=normal:spacing=110:scalable=false")
+	)
+;;;; Tramp
+(require 'tramp)
+(setq tramp-default-method "scp")
 ;;;; Ido
 (require 'ido)
 (ido-mode t)
 ;;;; Scala-Mode-2
-(require 'scala-mode2)
-(add-to-list 'load-path "~/.emacs.d/ensime/elisp/")
+;(require 'scala-mode2)
+;(add-to-list 'load-path "~/.emacs.d/ensime/elisp/")
 ;;;; Ensime
-(require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-(setq scala-indent:align-parameters t)
+;(require 'ensime)
+;(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+;(setq scala-indent:align-parameters t)
 ;;;; Pyregexp
-(require 'pyregexp)
-(define-key global-map (kbd "C-c r") 'pyregexp-replace)
-(define-key global-map (kbd "C-c q") 'pyregexp-query-replace)
+;(require 'pyregexp)
+;(define-key global-map (kbd "C-c r") 'pyregexp-replace)
+;(define-key global-map (kbd "C-c q") 'pyregexp-query-replace)
 ;;;; Windmove
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
@@ -38,8 +44,6 @@
 (electric-pair-mode 1)
 (setq inhibit-startup-screen t)
 (show-paren-mode t)
-
-
 
 ;;;; Backup
 (setq
