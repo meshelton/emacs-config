@@ -93,9 +93,14 @@ t)
 (init-package 'smartparens)
 (smartparens-global-mode t)
 (require 'smartparens-config)
-;;;; gitgutter
+;;;; git-gutter
 (init-package 'git-gutter)
 (global-git-gutter-mode t)
+;;;; visual-regexp
+(init-package 'visual-regexp)
+(require 'visual-regexp) 
+(define-key global-map (kbd "C-c r") 'vr/replace)
+(define-key global-map (kbd "C-c q") 'vr/query-replace)
 
 
 ;;;; Settings
