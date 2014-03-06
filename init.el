@@ -13,6 +13,9 @@
   t)
 t)
 
+
+;;;; Keybinds
+(global-set-key (kbd "<f1>") 'compile)
 ;;;; Appearance
 (load-theme 'wombat 1)
 (global-linum-mode 0)
@@ -45,15 +48,21 @@ t)
 
 ;;;; CEDET
 ;; Load CEDET.
-(load-file "~/.emacs.d/cedet-1.1/common/cedet.el")
+;(load-file "~/.emacs.d/cedet-1.1/common/cedet.el")
+;(require 'eieio-opt)
 ;; Enable EDE (Project Management) features
-(global-ede-mode 1)
-(semantic-load-enable-minimum-features)
-(semantic-load-enable-code-helpers)
+;(global-ede-mode 1)
+;(semantic-load-enable-minimum-features)
+;(semantic-load-enable-code-helpers)
+;(defun my-c++-mode-cedet-hook ()
+; (local-set-key "." 'semantic-complete-self-insert)
+; (local-set-key ">" 'semantic-complete-self-insert))
+;(add-hook 'c++-mode-hook 'my-c++-mode-cedet-hook)
 ;;;; ECB
-(add-to-list 'load-path "~/.emacs.d/ecb-master")
-(require 'ecb)
-(setq ecb-options-version "2.40")
+;(add-to-list 'load-path "~/.emacs.d/ecb-master")
+;(require 'ecb)
+;(setq ecb-options-version "2.40")
+
 ;;;; Tramp
 (require 'tramp)
 (setq tramp-default-method "scp")
@@ -78,6 +87,14 @@ t)
 (init-package 'rainbow-mode)
 ;;;; Lua Mode
 (init-package 'lua-mode)
+;;;; Markdown Mode
+(init-package 'markdown-mode)
+(init-package 'markdown-mode+)
+;;;; GLSL Mode
+(init-package 'glsl-mode)
+(add-to-list 'auto-mode-alist '("\\.vert\\'" . glsl-mode))
+(add-to-list 'auto-mode-alist '("\\.frag\\'" . glsl-mode))
+;(autoload 'glsl-mode "glsl-mode" nil t)
 ;;;; es-lib
 (init-package 'es-lib)
 ;;;; zeal-at-point
@@ -108,6 +125,8 @@ t)
 
 ;;;; Auto modes
 (add-to-list 'auto-mode-alist '("\\.ic$" . java-mode))
+
+
 
 ;;;; Backup
 (setq
@@ -146,7 +165,8 @@ t)
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ecb-options-version "2.40"))
+ '(ecb-options-version "2.40")
+ '(ede-project-directories (quote ("/home/michael/projects/box2dTests"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
