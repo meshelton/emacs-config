@@ -34,6 +34,8 @@
 			 ("melpa" . "http://melpa.milkbox.net/packages/")
 			 ("org" . "http://orgmode.org/elpa/")))
 (package-initialize)
+;;;; Manually managed stuff
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp"))
 
 ;;;; IMENU
 (defun imenu-elisp-sections ()
@@ -46,6 +48,19 @@
   (set-face-attribute 'default nil :font "Terminus:pixelsize=16:foundry=xos4:weight=normal:slant=normal:width=normal:spacing=110:scalable=false")
   )
 
+;;;; epc
+;;(init-package 'epc)
+;;;; webkit
+;;(require 'webkit)
+;;;; subword-mode
+(add-hook 'prog-mode-hook 'subword-mode)
+;;;; yafolding
+(init-package 'yafolding)
+(require 'yafolding)
+(add-hook 'prog-mode-hook
+          (lambda () (yafolding-mode)))
+(define-key yafolding-mode-map (kbd "<C-M-return>") 'yafolding-toggle-all)
+(define-key yafolding-mode-map (kbd "<C-return>") 'yafolding-toggle-element)
 ;;;; Ido
 (require 'ido)
 (ido-mode t)
@@ -93,6 +108,11 @@
 (setq scala-indent:align-parameters t)
 (setq scala-indent:indent-value-expression t)
 (setq scala-indent:align-forms t)
+;;;; ensime
+(init-package 'ensime)
+(require 'ensime)
+(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+(setq ensime-sem-high-enabled-p nil)
 ;;;; sbt-mode
 (init-package 'sbt-mode)
 ;;;; Windmove
@@ -100,6 +120,7 @@
   (windmove-default-keybindings))
 ;;;; Rainbow Mode
 (init-package 'rainbow-mode)
+(add-hook 'prog-mode-hook (lambda () (rainbow-mode 1)))
 ;;;; Lua Mode
 (init-package 'lua-mode)
 ;;;; Markdown Mode
@@ -141,7 +162,7 @@
   (save-excursion
     (if (re-search-forward "\\(class\\|object\\|trait\\)[ \t\n]+\\([a-zA-Z0-9_:=]+\\)[ \t\n]*" nil t)
 	
-      (buffer-substring (match-beginning 2) (match-end 2))
+        (buffer-substring (match-beginning 2) (match-end 2))
       "NONAME")))
 (defun scala-mode-def-and-args-doc ()
   (save-excursion
@@ -149,14 +170,14 @@
 	 (concat
 	  ;; function name
 	  "[ \t\n]*def[ \t\n]+\\([a-zA-Z0-9_:=]+\\)[ \t\n]*"
- 
+          
 	  ;; arguments
 	  "\\((\\([a-zA-Z0-9_:* \t\n]*\\))\\)?"
 	  ) nil t)
 
 	;; TODO: output args in a sane format to use in yasnippet, look at doxymancs line 1441 
 	(let* ((func (buffer-substring (match-beginning 1) (match-end 1)))
-	       ;(args (buffer-substring (match-beginning 3) (match-end 3)))
+                                        ;(args (buffer-substring (match-beginning 3) (match-end 3)))
 	       )
 	  (concat "${1:" func "} $0"))
       "${1:name} $0")))
@@ -226,17 +247,3 @@
  kept-new-versions 6
  kept-old-versions 2
  version-control t)       ; use versioned backups
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/Notes/org.org"))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
