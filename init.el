@@ -13,7 +13,6 @@
     t)
   t)
 
-
 ;;;; General Keybinds
 (global-set-key (kbd "<f1>") 'compile)
 ;;;; Appearance
@@ -25,17 +24,23 @@
 (show-paren-mode 1)
 (tool-bar-mode -1)
 (setq-default indent-tabs-mode nil)
-(setq tab-width 2) 
+(setq default-tab-width 2)
+(setq compilation-scroll-output 'first-error)
 
 ;;;; Packages
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")
 			 ("melpa" . "http://melpa.milkbox.net/packages/")
-			 ("org" . "http://orgmode.org/elpa/")))
+			 ("org" . "http://orgmode.org/elpa/")
+                         ("SC"   . "http://joseito.republika.pl/sunrise-commander/")))
 (package-initialize)
 ;;;; Manually managed stuff
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp"))
+
+;;;; exec-path-from-shell
+(init-package 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
 
 ;;;; IMENU
 (defun imenu-elisp-sections ()
@@ -47,7 +52,32 @@
 (when window-system
   (set-face-attribute 'default nil :font "Terminus:pixelsize=16:foundry=xos4:weight=normal:slant=normal:width=normal:spacing=110:scalable=false")
   )
-
+;;;; hydra
+(init-package 'hydra)
+(defhydra hydra-error (global-map "M-g")
+  "goto-error"
+  ("h" first-error "first")
+  ("n" next-error "next")
+  ("p" previous-error "prev")
+  ("l" recenter-top-bottom "recenter")
+  ("q" nil "quit"))
+(defhydra hydra-zoom (global-map "<f9>")
+  "zoom"
+  ("g" text-scale-increase "in")
+  ("l" text-scale-decrease "out")
+  ("q" nil "quit"))
+;;;; discover
+(init-package 'discover)
+(global-discover-mode 1)
+;;;; ace-jump-mode
+(init-package 'ace-jump-mode)
+;;;; ace-window
+(init-package 'ace-window)
+(define-key (current-global-map) [remap other-window] 'ace-window)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+(custom-set-faces
+ '(aw-leading-char-face
+   ((t (:inherit ace-jump-face-foreground :height 600)))))
 ;;;; epc
 ;;(init-package 'epc)
 ;;;; webkit
@@ -102,16 +132,49 @@
 ;;;; projectile
 (init-package 'projectile)
 (projectile-global-mode)
+;;;; rust-mode
+(init-package 'rust-mode)
+;;;; toml-mode
+(init-package 'toml-mode)
+(require 'toml-mode)
+;;;; go-mode
+(init-package 'go-mode)
+;;;; company-go
+(init-package 'company-go)
+(require 'company-go)
+;;;; go config
+(setenv "GOPATH" "/home/michael/go")
+(add-to-list 'exec-path "/home/michael/go/bin")
+(defun my-go-mode-hook ()
+                                        ; Use goimports instead of go-fmt
+  (setq gofmt-command "goimports")
+                                        ; Call Gofmt before saving
+  (add-hook 'before-save-hook 'gofmt-before-save)
+                                        ; Customize compile command to run go build
+  (if (not (string-match "go" compile-command))
+      (set (make-local-variable 'compile-command)
+           "go build -v && go test -v && go vet"))
+  (set (make-local-variable 'company-backends) '(company-go))
+  )
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+;;;; golint
+(init-package 'golint)
+;;;; csharp-mode
+(init-package 'csharp-mode)
+;;;; fsharp-mode
+(init-package 'fsharp-mode)
 ;;;; Scala-Mode-2
 (init-package 'scala-mode2)
 (setq scala-indent:step 2)
 (setq scala-indent:align-parameters t)
 (setq scala-indent:indent-value-expression t)
 (setq scala-indent:align-forms t)
+;;;; javap-mode
+(init-package 'javap-mode)
 ;;;; ensime
 (init-package 'ensime)
 (require 'ensime)
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+;;(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (setq ensime-sem-high-enabled-p nil)
 ;;;; sbt-mode
 (init-package 'sbt-mode)
@@ -121,6 +184,9 @@
 ;;;; Rainbow Mode
 (init-package 'rainbow-mode)
 (add-hook 'prog-mode-hook (lambda () (rainbow-mode 1)))
+;;;; image+
+(init-package 'image+)
+(eval-after-load 'image '(require 'image+))
 ;;;; Lua Mode
 (init-package 'lua-mode)
 ;;;; Markdown Mode
@@ -189,6 +255,36 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
 (add-hook 'haskell-mode-hook 'font-lock-mode)
 (add-hook 'haskell-mode-hook 'imenu-add-menubar-index)
+(custom-set-variables
+ '(haskell-process-suggest-remove-import-lines t)
+ '(haskell-process-auto-import-loaded-modules t)
+ '(haskell-process-log t))
+(eval-after-load 'haskell-mode '(progn
+                                  (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
+                                  (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+                                  (define-key haskell-mode-map (kbd "C-c C-n C-t") 'haskell-process-do-type)
+                                  (define-key haskell-mode-map (kbd "C-c C-n C-i") 'haskell-process-do-info)
+                                  (define-key haskell-mode-map (kbd "C-c C-n C-c") 'haskell-process-cabal-build)
+                                  (define-key haskell-mode-map (kbd "C-c C-n c") 'haskell-process-cabal)
+                                  (define-key haskell-mode-map (kbd "SPC") 'haskell-mode-contextual-space)))
+(eval-after-load 'haskell-cabal '(progn
+                                   (define-key haskell-cabal-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+                                   (define-key haskell-cabal-mode-map (kbd "C-c C-k") 'haskell-interactive-mode-clear)
+                                   (define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-process-cabal-build)
+                                   (define-key haskell-cabal-mode-map (kbd "C-c c") 'haskell-process-cabal)))
+;;;; hi2
+(init-package 'hi2)
+(add-hook 'haskell-mode-hook 'turn-on-hi2)
+;;;; ghc
+(init-package 'ghc)
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+(add-hook 'haskell-mode-hook '(lambda ()
+                                (local-set-key (kbd "RET") 'newline)))
+;;;; symon
+(init-package 'symon)
+;(symon-mode)
 ;;;; xkcd
 (init-package 'xkcd)
 ;;;; flycheck
@@ -198,6 +294,9 @@
 ;;;; company
 (init-package 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+(setq company-tooltip-limit 20)                      ; bigger popup window
+;;;; json-mode
+(init-package 'json-mode)
 ;;;; web-mode
 (init-package 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
@@ -229,7 +328,9 @@
 ;;;; erc
 (setq erc-echo-notices-in-minibuffer-flag t)
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-
+(setq erc-nick "meshelton")
+;;;; 2048-game
+(init-package '2048-game)
 ;;;; Settings
 (setq visible-bell t)
 (setq browse-url-browser-function 'browse-url-generic
@@ -247,3 +348,22 @@
  kept-new-versions 6
  kept-old-versions 2
  version-control t)       ; use versioned backups
+(put 'downcase-region 'disabled nil)
+
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(agda2-include-dirs
+   (quote
+    ("." "/home/michael/Downloads/agda-stdlib-0.8.1/src"))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(put 'upcase-region 'disabled nil)
