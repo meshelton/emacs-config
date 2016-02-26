@@ -30,10 +30,10 @@
 ;;;; Packages
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			 ("marmalade" . "http://marmalade-repo.org/packages/")
-			 ("melpa" . "http://melpa.milkbox.net/packages/")
-			 ("org" . "http://orgmode.org/elpa/")
-                         ("SC"   . "http://joseito.republika.pl/sunrise-commander/")))
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")
+                         ("org" . "http://orgmode.org/elpa/")
+                         ("SC" . "http://joseito.republika.pl/sunrise-commander/")))
 (package-initialize)
 ;;;; Manually managed stuff
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp"))
@@ -69,6 +69,23 @@
 ;;;; discover
 (init-package 'discover)
 (global-discover-mode 1)
+;;;; company
+(init-package 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-tooltip-limit 20)                      ; bigger popup window
+;;;; ycmd
+(init-package 'ycmd)
+(add-hook 'after-init-hook #'global-ycmd-mode)
+(set-variable 'ycmd-server-command '("python2" "/opt/ycmd/ycmd"))
+;;;; company-ycmd
+(init-package 'company-ycmd)
+(company-ycmd-setup)
+;;;; emacs-eclim
+(init-package 'emacs-eclim)
+(global-eclim-mode)
+(require 'company-emacs-eclim)
+(company-emacs-eclim-setup)
+(require 'eclimd)
 ;;;; ace-jump-mode
 (init-package 'ace-jump-mode)
 ;;;; ace-window
@@ -76,8 +93,11 @@
 (define-key (current-global-map) [remap other-window] 'ace-window)
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (custom-set-faces
- '(aw-leading-char-face
-   ((t (:inherit ace-jump-face-foreground :height 600)))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 600)))))
 ;;;; epc
 ;;(init-package 'epc)
 ;;;; webkit
@@ -132,11 +152,17 @@
 ;;;; projectile
 (init-package 'projectile)
 (projectile-global-mode)
+;;;; string-inflection
+(init-package 'string-inflection)
+(require 'string-inflection)
+(global-set-key (kbd "C-c C-i") 'string-inflection-cycle)
 ;;;; rust-mode
 (init-package 'rust-mode)
 ;;;; toml-mode
 (init-package 'toml-mode)
 (require 'toml-mode)
+;;;; yaml-mode
+(init-package 'yaml-mode)
 ;;;; go-mode
 (init-package 'go-mode)
 ;;;; company-go
@@ -171,6 +197,10 @@
 (setq scala-indent:align-forms t)
 ;;;; javap-mode
 (init-package 'javap-mode)
+;;;; groovy-mode
+(init-package 'groovy-mode)
+(add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\.gradle$" . groovy-mode))
 ;;;; ensime
 (init-package 'ensime)
 (require 'ensime)
@@ -178,6 +208,9 @@
 (setq ensime-sem-high-enabled-p nil)
 ;;;; sbt-mode
 (init-package 'sbt-mode)
+;;;; gradle-mode
+(init-package 'gradle-mode)
+(setq gradle-use-gradlew 1)
 ;;;; Windmove
 (when (fboundp 'windmove-default-keybindings)
   (windmove-default-keybindings))
@@ -227,25 +260,25 @@
 (defun scala-mode-find-clstrtobj-name-doc ()
   (save-excursion
     (if (re-search-forward "\\(class\\|object\\|trait\\)[ \t\n]+\\([a-zA-Z0-9_:=]+\\)[ \t\n]*" nil t)
-	
+        
         (buffer-substring (match-beginning 2) (match-end 2))
       "NONAME")))
 (defun scala-mode-def-and-args-doc ()
   (save-excursion
     (if (re-search-forward
-	 (concat
-	  ;; function name
-	  "[ \t\n]*def[ \t\n]+\\([a-zA-Z0-9_:=]+\\)[ \t\n]*"
+         (concat
+          ;; function name
+          "[ \t\n]*def[ \t\n]+\\([a-zA-Z0-9_:=]+\\)[ \t\n]*"
           
-	  ;; arguments
-	  "\\((\\([a-zA-Z0-9_:* \t\n]*\\))\\)?"
-	  ) nil t)
+          ;; arguments
+          "\\((\\([a-zA-Z0-9_:* \t\n]*\\))\\)?"
+          ) nil t)
 
-	;; TODO: output args in a sane format to use in yasnippet, look at doxymancs line 1441 
-	(let* ((func (buffer-substring (match-beginning 1) (match-end 1)))
+        ;; TODO: output args in a sane format to use in yasnippet, look at doxymancs line 1441 
+        (let* ((func (buffer-substring (match-beginning 1) (match-end 1)))
                                         ;(args (buffer-substring (match-beginning 3) (match-end 3)))
-	       )
-	  (concat "${1:" func "} $0"))
+               )
+          (concat "${1:" func "} $0"))
       "${1:name} $0")))
 
 ;;;; hasekll-mode
@@ -256,9 +289,16 @@
 (add-hook 'haskell-mode-hook 'font-lock-mode)
 (add-hook 'haskell-mode-hook 'imenu-add-menubar-index)
 (custom-set-variables
- '(haskell-process-suggest-remove-import-lines t)
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-log t))
+ '(haskell-process-log t)
+ '(haskell-process-suggest-remove-import-lines t)
+ '(magit-diff-arguments (quote ("--no-ext-diff" "--stat")))
+ '(magit-fetch-arguments (quote ("--prune")))
+ '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256"))))
 (eval-after-load 'haskell-mode '(progn
                                   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
                                   (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
@@ -284,17 +324,13 @@
                                 (local-set-key (kbd "RET") 'newline)))
 ;;;; symon
 (init-package 'symon)
-;(symon-mode)
+                                        ;(symon-mode)
 ;;;; xkcd
 (init-package 'xkcd)
 ;;;; flycheck
 (init-package 'flycheck)
 ;;;; ag
 (init-package 'ag)
-;;;; company
-(init-package 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-(setq company-tooltip-limit 20)                      ; bigger popup window
 ;;;; json-mode
 (init-package 'json-mode)
 ;;;; web-mode
@@ -350,3 +386,25 @@
  version-control t)       ; use versioned backups
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
+
+(defun sort-lines-by-length (b e)
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region b e)
+      (let ((items (sort 
+		    (split-string 
+		     (buffer-substring (point-min) (point-max)) "[\n]")
+		    (lambda(x y) (< (length x) (length y)))))
+	    )
+	(delete-region (point-min) (point-max))
+	(save-excursion
+	  (point-min)
+	  (insert (apply 'concat (map 'list (lambda (x) (format "%s\n" x)) items))))))))
+
+(ignore-errors
+  (require 'ansi-color)
+  (defun my-colorize-compilation-buffer ()
+    (when (eq major-mode 'compilation-mode)
+      (ansi-color-apply-on-region compilation-filter-start (point-max))))
+  (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer))
