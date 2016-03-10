@@ -298,7 +298,8 @@
  '(haskell-process-suggest-remove-import-lines t)
  '(magit-diff-arguments (quote ("--no-ext-diff" "--stat")))
  '(magit-fetch-arguments (quote ("--prune")))
- '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256"))))
+ '(magit-log-arguments (quote ("--graph" "--color" "--decorate" "-n256")))
+ '(markdown-command "marked"))
 (eval-after-load 'haskell-mode '(progn
                                   (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-or-reload)
                                   (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
@@ -336,6 +337,20 @@
 ;;;; web-mode
 (init-package 'web-mode)
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+;;;; tide
+(init-package 'tide)
+(add-hook 'typescript-mode-hook
+          (lambda ()
+            (tide-setup)
+            (eldoc-mode +1)
+            (company-mode-on)))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (tide-setup)
+              (eldoc-mode +1)
+              (company-mode-on))))
 ;;;; org
 (init-package 'org)
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
@@ -367,6 +382,8 @@
 (setq erc-nick "meshelton")
 ;;;; 2048-game
 (init-package '2048-game)
+;;;; restclient
+(init-package 'restclient)
 ;;;; Settings
 (setq visible-bell t)
 (setq browse-url-browser-function 'browse-url-generic
@@ -393,14 +410,14 @@
     (save-restriction
       (narrow-to-region b e)
       (let ((items (sort 
-		    (split-string 
-		     (buffer-substring (point-min) (point-max)) "[\n]")
-		    (lambda(x y) (< (length x) (length y)))))
-	    )
-	(delete-region (point-min) (point-max))
-	(save-excursion
-	  (point-min)
-	  (insert (apply 'concat (map 'list (lambda (x) (format "%s\n" x)) items))))))))
+                    (split-string 
+                     (buffer-substring (point-min) (point-max)) "[\n]")
+                    (lambda(x y) (< (length x) (length y)))))
+            )
+        (delete-region (point-min) (point-max))
+        (save-excursion
+          (point-min)
+          (insert (apply 'concat (map 'list (lambda (x) (format "%s\n" x)) items))))))))
 
 (ignore-errors
   (require 'ansi-color)
