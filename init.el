@@ -88,17 +88,6 @@
 ;; https://github.com/abingham/emacs-ycmd
 (init-package 'company-ycmd)
 (company-ycmd-setup)
-;;;; company-web
-;; https://github.com/osv/company-web
-(init-package 'company-web)
-(require 'company-web-html)
-;;;; emacs-eclim
-;; https://github.com/senny/emacs-eclim
-(init-package 'emacs-eclim)
-(require 'eclimd)
-(global-eclim-mode)
-(require 'company-emacs-eclim)
-(company-emacs-eclim-setup)
 ;;;; ace-jump-mode
 ;; https://github.com/winterTTr/ace-jump-mode
 (init-package 'ace-jump-mode)
@@ -119,27 +108,23 @@
   (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))
 (add-hook 'ido-setup-hook #'bind-ido-keys)
 ;;;; flx
-(init-package 'flx)
+;; https://github.com/lewang/flx
 (init-package 'flx-ido)
-(require 'flx-ido)
-(ido-mode 1)
 (ido-everywhere 1)
 (flx-ido-mode 1)
 (setq ido-use-faces nil)
-;;;; ido-at-point
-(init-package 'ido-at-point)
-(require 'ido-at-point)
-(ido-at-point-mode)
 ;;;;  ido-vertical-mode
+;; https://github.com/creichert/ido-vertical-mode.el
 (init-package 'ido-vertical-mode)
-(require 'ido-vertical-mode)
 (ido-vertical-mode 1)
 ;;;; ido-ubiquitous
+;; https://github.com/DarwinAwardWinner/ido-ubiquitous
 (init-package 'ido-ubiquitous)
-(setq ido-everywhere t)
+(ido-ubiquitous-mode 1)
 ;;;; smex
+;; https://github.com/nonsequitur/smex
 (init-package 'smex)
-(require 'smex)
+(smex-initialize) 
 (defadvice smex (around space-inserts-hyphen activate compile)
   (let ((ido-cannot-complete-command 
          `(lambda ()
@@ -151,15 +136,77 @@
 (define-key global-map (kbd "M-x") 'smex)
 (define-key global-map (kbd "M-X") 'smex-major-mode-commands)
 (define-key global-map (kbd "C-c C-c M-x") 'execute-extended-command)
-;;;; ggtags
-(init-package 'ggtags)
 ;;;; projectile
+;; https://github.com/bbatsov/projectile
 (init-package 'projectile)
 (projectile-global-mode)
+;; https://github.com/abo-abo/hydra/wiki/Projectile-&-Fixmee
+(defhydra hydra-project (:color blue :hint nil :idle 0.4)
+        "
+                                                                    ╭────────────┐
+    Files             Search          Buffer             Do         │ Projectile │
+  ╭─────────────────────────────────────────────────────────────────┴────────────╯
+    [_f_] file          [_a_] ag          [_b_] switch         [_g_] magit
+    [_l_] file dwim     [_A_] grep        [_v_] show all       [_p_] commander
+    [_r_] recent file   [_s_] occur       [_V_] ibuffer        [_i_] info
+    [_d_] dir           [_S_] replace     [_K_] kill all
+    [_o_] other         [_t_] find tag
+    [_u_] test file     [_T_] make tags
+    [_h_] root         
+  --------------------------------------------------------------------------------
+        "
+        ("<tab>" hydra-master/body "back")
+        ("<ESC>" nil "quit")
+        ("a"   projectile-ag)
+        ("A"   projectile-grep)
+        ("b"   projectile-switch-to-buffer)
+        ("B"   projectile-switch-to-buffer-other-window)
+        ("c"   projectile-run-async-shell-command-in-root)
+        ("C"   projectile-run-command-in-root)
+        ("d"   projectile-find-dir)
+        ("D"   projectile-find-dir-other-window)
+        ("f"   projectile-find-file)
+        ("F"   projectile-find-file-other-window)
+        ("g"   projectile-vc)
+        ("h"   projectile-dired)
+        ("i"   projectile-project-info)
+        ("kc"  projectile-invalidate-cache)
+        ("kd"  projectile-remove-known-project)
+        ("kk"  projectile-cache-current-file)
+        ("K"   projectile-kill-buffers)
+        ("ks"  projectile-cleanup-known-projects)
+        ("l"   projectile-find-file-dwim)
+        ("L"   projectile-find-file-dwim-other-window)
+        ("m"   projectile-compile-project)
+        ("o"   projectile-find-other-file)
+        ("O"   projectile-find-other-file-other-window)
+        ("p"   projectile-commander)
+        ("r"   projectile-recentf)
+        ("s"   projectile-multi-occur)
+        ("S"   projectile-replace)
+        ("t"   projectile-find-tag)
+        ("T"   projectile-regenerate-tags)
+        ("u"   projectile-find-test-file)
+        ("U"   projectile-test-project)
+        ("v"   projectile-display-buffer)
+        ("V"   projectile-ibuffer))
+(define-key global-map (kbd "C-x p") 'hydra-project/body)
 ;;;; string-inflection
+;;https://github.com/akicho8/string-inflection
 (init-package 'string-inflection)
 (require 'string-inflection)
 (global-set-key (kbd "C-c C-i") 'string-inflection-cycle)
+;;;; company-web
+;; https://github.com/osv/company-web
+(init-package 'company-web)
+(require 'company-web-html)
+;;;; emacs-eclim
+;; https://github.com/senny/emacs-eclim
+(init-package 'emacs-eclim)
+(require 'eclimd)
+(global-eclim-mode)
+(require 'company-emacs-eclim)
+(company-emacs-eclim-setup)
 ;;;; rust-mode
 (init-package 'rust-mode)
 ;;;; toml-mode
