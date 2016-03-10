@@ -35,24 +35,19 @@
                          ("org" . "http://orgmode.org/elpa/")
                          ("SC" . "http://joseito.republika.pl/sunrise-commander/")))
 (package-initialize)
-;;;; Manually managed stuff
+;;;; Manually managed elisp
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp"))
 
 ;;;; exec-path-from-shell
+;; https://github.com/purcell/exec-path-from-shell
 (init-package 'exec-path-from-shell)
 (exec-path-from-shell-initialize)
 
-;;;; IMENU
-(defun imenu-elisp-sections ()
-  (setq imenu-prev-index-position-function nil)
-  (add-to-list 'imenu-generic-expression '("Sections" "^;;;; \\(.+\\)$" 1) t))
-(add-hook 'emacs-lisp-mode-hook 'imenu-elisp-sections)
-
 ;;;; Font
 (when window-system
-  (set-face-attribute 'default nil :font "Terminus:pixelsize=16:foundry=xos4:weight=normal:slant=normal:width=normal:spacing=110:scalable=false")
-  )
+  (set-face-attribute 'default nil :font "Terminus:pixelsize=16:foundry=xos4:weight=normal:slant=normal:width=normal:spacing=110:scalable=false"))
 ;;;; hydra
+;; https://github.com/abo-abo/hydra
 (init-package 'hydra)
 (defhydra hydra-error (global-map "M-g")
   "goto-error"
@@ -67,53 +62,62 @@
   ("l" text-scale-decrease "out")
   ("q" nil "quit"))
 ;;;; discover
+;; https://github.com/mickeynp/discover.el
 (init-package 'discover)
 (global-discover-mode 1)
 ;;;; company
+;; http://company-mode.github.io/
 (init-package 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-(setq company-tooltip-limit 20)                      ; bigger popup window
+(add-hook 'after-init-hook 'global-company-mode)     
+; bigger popup window
+(setq company-tooltip-limit 20)                      
+; align annotations to the right tooltip border
+(setq company-tooltip-align-annotations 't)          
+; decrease delay before autocompletion popup shows
+(setq company-idle-delay .3)                         
+; start autocompletion only after typing
+(setq company-begin-commands '(self-insert-command)) 
+; Force complete file names on "C-c /" key
+(global-set-key (kbd "C-c /") 'company-files)        
 ;;;; ycmd
+;; https://github.com/abingham/emacs-ycmd
 (init-package 'ycmd)
 (add-hook 'after-init-hook #'global-ycmd-mode)
 (set-variable 'ycmd-server-command '("python2" "/opt/ycmd/ycmd"))
 ;;;; company-ycmd
+;; https://github.com/abingham/emacs-ycmd
 (init-package 'company-ycmd)
 (company-ycmd-setup)
+;;;; company-web
+;; https://github.com/osv/company-web
+(init-package 'company-web)
+(require 'company-web-html)
 ;;;; emacs-eclim
+;; https://github.com/senny/emacs-eclim
 (init-package 'emacs-eclim)
+(require 'eclimd)
 (global-eclim-mode)
 (require 'company-emacs-eclim)
 (company-emacs-eclim-setup)
-(require 'eclimd)
 ;;;; ace-jump-mode
+;; https://github.com/winterTTr/ace-jump-mode
 (init-package 'ace-jump-mode)
+(define-key global-map (kbd "C-c SPC") 'ace-jump-mode)
 ;;;; ace-window
+;; https://github.com/abo-abo/ace-window
 (init-package 'ace-window)
 (define-key (current-global-map) [remap other-window] 'ace-window)
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(aw-leading-char-face ((t (:inherit ace-jump-face-foreground :height 600)))))
-;;;; epc
-;;(init-package 'epc)
-;;;; webkit
-;;(require 'webkit)
 ;;;; subword-mode
 (add-hook 'prog-mode-hook 'subword-mode)
-;;;; yafolding
-(init-package 'yafolding)
-(require 'yafolding)
-(add-hook 'prog-mode-hook
-          (lambda () (yafolding-mode)))
-(define-key yafolding-mode-map (kbd "<C-M-return>") 'yafolding-toggle-all)
-(define-key yafolding-mode-map (kbd "<C-return>") 'yafolding-toggle-element)
 ;;;; Ido
 (require 'ido)
 (ido-mode t)
+(defun bind-ido-keys ()
+  "Keybindings for ido mode."
+  (define-key ido-completion-map (kbd "C-n") 'ido-next-match) 
+  (define-key ido-completion-map (kbd "C-p") 'ido-prev-match))
+(add-hook 'ido-setup-hook #'bind-ido-keys)
 ;;;; flx
 (init-package 'flx)
 (init-package 'flx-ido)
