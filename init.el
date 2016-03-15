@@ -14,7 +14,7 @@
   t)
 
 ;;;; General Keybinds
-(global-set-key (kbd "<f1>") 'compile)
+(global-set-key (kbd "<f1>") 'projectile-compile-project)
 ;;;; Appearance
 (load-theme 'wombat 1)
 (global-linum-mode 0)
@@ -69,15 +69,15 @@
 ;; http://company-mode.github.io/
 (init-package 'company)
 (add-hook 'after-init-hook 'global-company-mode)     
-; bigger popup window
+                                        ; bigger popup window
 (setq company-tooltip-limit 20)                      
-; align annotations to the right tooltip border
+                                        ; align annotations to the right tooltip border
 (setq company-tooltip-align-annotations 't)          
-; decrease delay before autocompletion popup shows
+                                        ; decrease delay before autocompletion popup shows
 (setq company-idle-delay .3)                         
-; start autocompletion only after typing
+                                        ; start autocompletion only after typing
 (setq company-begin-commands '(self-insert-command)) 
-; Force complete file names on "C-c /" key
+                                        ; Force complete file names on "C-c /" key
 (global-set-key (kbd "C-c /") 'company-files)        
 ;;;; ycmd
 ;; https://github.com/abingham/emacs-ycmd
@@ -140,62 +140,13 @@
 ;; https://github.com/bbatsov/projectile
 (init-package 'projectile)
 (projectile-global-mode)
-;; https://github.com/abo-abo/hydra/wiki/Projectile-&-Fixmee
-(defhydra hydra-project (:color blue :hint nil :idle 0.4)
-        "
-                                                                    ╭────────────┐
-    Files             Search          Buffer             Do         │ Projectile │
-  ╭─────────────────────────────────────────────────────────────────┴────────────╯
-    [_f_] file          [_a_] ag          [_b_] switch         [_g_] magit
-    [_l_] file dwim     [_A_] grep        [_v_] show all       [_p_] commander
-    [_r_] recent file   [_s_] occur       [_V_] ibuffer        [_i_] info
-    [_d_] dir           [_S_] replace     [_K_] kill all
-    [_o_] other         [_t_] find tag
-    [_u_] test file     [_T_] make tags
-    [_h_] root         
-  --------------------------------------------------------------------------------
-        "
-        ("<tab>" hydra-master/body "back")
-        ("<ESC>" nil "quit")
-        ("a"   projectile-ag)
-        ("A"   projectile-grep)
-        ("b"   projectile-switch-to-buffer)
-        ("B"   projectile-switch-to-buffer-other-window)
-        ("c"   projectile-run-async-shell-command-in-root)
-        ("C"   projectile-run-command-in-root)
-        ("d"   projectile-find-dir)
-        ("D"   projectile-find-dir-other-window)
-        ("f"   projectile-find-file)
-        ("F"   projectile-find-file-other-window)
-        ("g"   projectile-vc)
-        ("h"   projectile-dired)
-        ("i"   projectile-project-info)
-        ("kc"  projectile-invalidate-cache)
-        ("kd"  projectile-remove-known-project)
-        ("kk"  projectile-cache-current-file)
-        ("K"   projectile-kill-buffers)
-        ("ks"  projectile-cleanup-known-projects)
-        ("l"   projectile-find-file-dwim)
-        ("L"   projectile-find-file-dwim-other-window)
-        ("m"   projectile-compile-project)
-        ("o"   projectile-find-other-file)
-        ("O"   projectile-find-other-file-other-window)
-        ("p"   projectile-commander)
-        ("r"   projectile-recentf)
-        ("s"   projectile-multi-occur)
-        ("S"   projectile-replace)
-        ("t"   projectile-find-tag)
-        ("T"   projectile-regenerate-tags)
-        ("u"   projectile-find-test-file)
-        ("U"   projectile-test-project)
-        ("v"   projectile-display-buffer)
-        ("V"   projectile-ibuffer))
-(define-key global-map (kbd "C-x p") 'hydra-project/body)
 ;;;; string-inflection
 ;;https://github.com/akicho8/string-inflection
 (init-package 'string-inflection)
 (require 'string-inflection)
 (global-set-key (kbd "C-c C-i") 'string-inflection-cycle)
+;;;; less-css-mode
+(init-package 'less-css-mode)
 ;;;; company-web
 ;; https://github.com/osv/company-web
 (init-package 'company-web)
@@ -395,13 +346,13 @@
             (tide-setup)
             (eldoc-mode +1)
             (company-mode-on)))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 (add-hook 'web-mode-hook
           (lambda ()
             (when (string-equal "tsx" (file-name-extension buffer-file-name))
               (tide-setup)
               (eldoc-mode +1)
               (company-mode-on))))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 ;;;; org
 (init-package 'org)
 (add-to-list 'auto-mode-alist '("\\.\\(org\\|org_archive\\|txt\\)$" . org-mode))
