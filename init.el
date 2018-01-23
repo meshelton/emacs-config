@@ -67,24 +67,3 @@
  version-control t)       ; use versioned backups
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
-
-
-
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(compilation-error-regexp-alist
-   (quote
-    (google3-build-log-parser-info google3-build-log-parser-warning google3-build-log-parser-error google-blaze-error google-log-error google-log-warning google-log-info google-log-fatal-message google-forge-python gunit-stack-trace absoft ada aix ant bash borland python-tracebacks-and-caml comma cucumber msft edg-1 edg-2 epc ftnchek iar ibm irix java jikes-file maven jikes-line clang-include gcc-include ruby-Test::Unit gnu lcc makepp mips-1 mips-2 msft omake oracle perl php rxp sparc-pascal-file sparc-pascal-line sparc-pascal-example sun sun-ada watcom 4bsd gcov-file gcov-header gcov-nomark gcov-called-line gcov-never-called perl--Pod::Checker perl--Test perl--Test2 perl--Test::Harness weblint guile-file guile-line)))
- '(package-selected-packages
-   (quote
-    (exwm zeal-at-point yasnippet yaml-mode xkcd web-mode visual-regexp-steroids toml-mode tide symon string-inflection smex smartparens rust-mode restclient rainbow-mode projectile multiple-cursors markdown-mode+ magit lua-mode less-css-mode json-mode javap-mode image+ ido-vertical-mode ido-ubiquitous hydra hi2 groovy-mode gradle-mode glsl-mode ghc fsharp-mode flx-ido exec-path-from-shell es-lib discover csharp-mode company-ycmd company-web cider ag ace-window ace-jump-mode 2048-game))))

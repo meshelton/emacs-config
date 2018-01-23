@@ -2,5 +2,4 @@
 *
 # Whitelist select files
 !init.el
-!README.md
 !.gitignore
