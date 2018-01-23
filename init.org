@@ -9,6 +9,20 @@ Key Shortcut to Insert Source Code Markup
 To insert source code markup, press [< s Tab].
 Then, to insert your language's name, Alt+x complete-symbol [Ctrl+Alt+i]
 
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun tangle-init ()
+    "If the current buffer is 'init.org' the code-blocks are
+  tangled, and the tangled file is compiled."
+    (when (equal (buffer-file-name)
+                 (expand-file-name (concat user-emacs-directory "init.org")))
+      ;; Avoid running hooks when tangling.
+      (let ((prog-mode-hook nil))
+        (org-babel-tangle)
+        (byte-compile-file (concat user-emacs-directory "init.el")))))
+
+  (add-hook 'after-save-hook 'tangle-init)
+#+END_SRC
+
 Bootstrap straight 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
@@ -26,7 +40,7 @@ Bootstrap straight
 #+END_SRC
 
 Defining functions for computer specific configuration
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   (defun system-is-workstation ()
     (interactive)
     "Return true if the system we are running is my work desktop at Google"
@@ -35,7 +49,7 @@ Defining functions for computer specific configuration
 #+END_SRC
 
 Personal Information
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   (setq user-full-name "Michael Shelton"
         user-mail-address "michael.e.shelton@gmail.com")
   (if (system-is-workstation)
@@ -44,7 +58,7 @@ Personal Information
 #+END_SRC
 
 Backup
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
   (setq delete-old-versions -1)
   (setq version-control t)
@@ -54,7 +68,7 @@ Backup
 #+END_SRC
 
 Google specific emacs packages
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   (if (system-is-workstation)
       (require 'google)
     (require 'p4-google)                ;; g4-annotate, improves find-file-at-point
@@ -69,7 +83,7 @@ Google specific emacs packages
 #+END_SRC
 
 Appearance
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle yes
   (load-theme 'wombat 1)
   (global-linum-mode 0)
   (column-number-mode 1)
@@ -78,24 +92,25 @@ Appearance
   (show-paren-mode 1)
   (tool-bar-mode -1)
   (setq-default indent-tabs-mode nil)
-  (setq default-tab-width 2)
+  (setq tab-width 2)
   (setq compilation-scroll-output 'first-error)
 #+END_SRC
 
+Multiple Cursors
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package multiple-cursors)
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-^") 'mc/mark-all-like-this)
+#+END_SRC
+
 Visual Regular Expressions
-#+BEGIN_SRC emacs-lisp
-  (straight-use-package 'visual-regexp)
-  (straight-use-package 'visual-regexp-steroids)
-  (require 'visual-regexp-steroids)
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package visual-regexp)
+  (use-package visual-regexp-steroids)
   (define-key global-map (kbd "C-c C-r") 'vr/replace)
   (define-key global-map (kbd "C-c C-q") 'vr/query-replace)
   (define-key global-map (kbd "C-c C-m") 'vr/mc-mark)
 #+END_SRC
 
-Multiple Cursors
-#+BEGIN_SRC emacs-lisp
-  (straight-use-package 'multiple-cursors)
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-^") 'mc/mark-all-like-this)
-#+END_SRC
+
