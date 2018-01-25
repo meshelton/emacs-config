@@ -125,6 +125,7 @@ Visual Regular Expressions
     :bind ("C-c C-m" . 'vr/mc-mark))
 #+END_SRC
 
+Magit
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package magit)
 #+END_SRC
