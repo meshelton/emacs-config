@@ -1,28 +1,47 @@
-- [Emacs Initialization File](#org983f098)
-  - [Bootstrapping a literate configuration file](#org62bcc61)
-    - [Requirements](#orgd471a62)
+- [Emacs Initialization File](#org4046208)
+  - [Bootstrapping a literate configuration file](#org6005cf0)
+    - [[init.el](init.el)](#org73eeaa0)
 
 
 
-<a id="org983f098"></a>
+<a id="org4046208"></a>
 
 # Emacs Initialization File
 
 todo: need to add better complete support
 
 
-<a id="org62bcc61"></a>
+<a id="org6005cf0"></a>
 
 ## Bootstrapping a literate configuration file
 
-The endgoal here is to have an easily shareable, readable, and reproducable emacs setup
+The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="orgd471a62"></a>
+<a id="org73eeaa0"></a>
 
-### Requirements
+### [init.el](init.el)
 
-1.  emacs that is bundled with org-mode v7.0.0
+This is the entry point to the entire configuration process. When you first clone this repo [init.el](init.el) should look like this:
+
+```emacs-lisp
+;;; .emacs --- Emacs initialization file -*- lexical-binding: t; -*-
+
+;; This file replaces itself with the actual configuration at first run.
+
+;; We can't tangle without org!
+(require 'org)
+;; Open the configuration
+(find-file (concat user-emacs-directory "README.org"))
+;; tangle it
+(org-babel-tangle)
+;; load it
+(load-file (concat user-emacs-directory "init.el"))
+;; finally byte-compile it
+(byte-compile-file (concat user-emacs-directory "init.el"))
+```
+
+This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 ```emacs-lisp
 (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
@@ -44,11 +63,6 @@ The endgoal here is to have an easily shareable, readable, and reproducable emac
 ```
 
 ```emacs-lisp
-(require 'ox-md)
-(use-package ox-gfm)
-```
-
-```emacs-lisp
 (defun tangle-init ()
   "If the current buffer is 'init.org' the code-blocks are
 tangled, and the tangled file is compiled."
@@ -60,6 +74,11 @@ tangled, and the tangled file is compiled."
       (byte-compile-file (concat user-emacs-directory "init.el")))))
 
 (add-hook 'after-save-hook 'tangle-init)
+```
+
+```emacs-lisp
+(require 'ox-md)
+(use-package ox-gfm)
 ```
 
 Defining functions for computer specific configuration
@@ -143,6 +162,8 @@ Visual Regular Expressions
 (use-package visual-regexp-steroids
   :bind ("C-c C-m" . 'vr/mc-mark))
 ```
+
+Magit
 
 ```emacs-lisp
 (use-package magit)
