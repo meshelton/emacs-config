@@ -1,24 +1,39 @@
-- [Emacs Initialization File](#org4046208)
-  - [Bootstrapping a literate configuration file](#org6005cf0)
-    - [[init.el](init.el)](#org73eeaa0)
+- [Emacs Initialization File](#orgf6009e2)
+  - [make `(C-c C-l)` use file completion when `file:` is used](#org4bb6101)
+  - [figure out how to quickly reindent code blocks](#org7d9ff16)
+  - [Bootstrapping](#org9aa8887)
+    - [[init.el](init.el)](#org8b70644)
+    - [[README.org](README.md)](#orgce4e807)
+      - [Fix `use-package` weirdness with `org-mode`](#orgffc891f)
+      - [Add hook to automatically generate readme on save](#orgbac4986)
+  - [Configuration](#orgd6428b5)
 
 
 
-<a id="org4046208"></a>
+<a id="orgf6009e2"></a>
 
 # Emacs Initialization File
 
-todo: need to add better complete support
 
 
-<a id="org6005cf0"></a>
+<a id="org4bb6101"></a>
 
-## Bootstrapping a literate configuration file
+## TODO make `(C-c C-l)` use file completion when `file:` is used
+
+
+<a id="org7d9ff16"></a>
+
+## TODO figure out how to quickly reindent code blocks
+
+
+<a id="org9aa8887"></a>
+
+## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org73eeaa0"></a>
+<a id="org8b70644"></a>
 
 ### [init.el](init.el)
 
@@ -43,6 +58,33 @@ This is the entry point to the entire configuration process. When you first clon
 
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
+
+<a id="orgce4e807"></a>
+
+### [README.org](README.md)
+
+This is where the main configuration goes. Any code blocks that have the `:tangle yes` will be used to construct the final init.el file through the function `(org-babel-tangle)`. The initial processesing of [README.org](README.md) will be triggered by [init.el](init.el). Subsequent init.el generations are through this `after-save-hook` on [README.org](README.md)
+
+```emacs-lisp
+(defun tangle-init ()
+  "If the current buffer is 'init.org' the code-blocks are
+tangled, and the tangled file is compiled."
+  (when (equal (buffer-file-name)
+               (expand-file-name (concat user-emacs-directory "README.org")))
+    ;; Avoid running hooks when tangling.
+    (let ((prog-mode-hook nil))
+      (org-babel-tangle "init.el")
+      (byte-compile-file (concat user-emacs-directory "init.el")))))
+
+(add-hook 'after-save-hook 'tangle-init)
+```
+
+We then load up a couple packages:
+
+1.  Fancy package manager [straight.el](https://github.com/raxod502/straight.el)
+2.  A nicer package configuration framework [use-package](https://github.com/jwiegley/use-package)
+3.  An updated version of [org-mode](https://orgmode.org/)
+
 ```emacs-lisp
 (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
       (bootstrap-version 3))
@@ -62,24 +104,25 @@ This code will load org mode, move specified code blocks from [README.org](READM
 (use-package org)
 ```
 
-```emacs-lisp
-(defun tangle-init ()
-  "If the current buffer is 'init.org' the code-blocks are
-tangled, and the tangled file is compiled."
-  (when (equal (buffer-file-name)
-               (expand-file-name (concat user-emacs-directory "README.org")))
-    ;; Avoid running hooks when tangling.
-    (let ((prog-mode-hook nil))
-      (org-babel-tangle "init.el")
-      (byte-compile-file (concat user-emacs-directory "init.el")))))
 
-(add-hook 'after-save-hook 'tangle-init)
-```
+<a id="orgffc891f"></a>
+
+#### TODO Fix `use-package` weirdness with `org-mode`
+
+
+<a id="orgbac4986"></a>
+
+#### TODO Add hook to automatically generate readme on save
 
 ```emacs-lisp
 (require 'ox-md)
 (use-package ox-gfm)
 ```
+
+
+<a id="orgd6428b5"></a>
+
+## Configuration
 
 Defining functions for computer specific configuration
 

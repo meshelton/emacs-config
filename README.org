@@ -5,9 +5,11 @@
 * Emacs Initialization File
   #+PROPERTY: EXPORT_FILE_NAME README.md
 
-todo: need to add better complete support
+** TODO make =(C-c C-l)= use file completion when =file:= is used
+** TODO figure out how to quickly reindent code blocks
 
-** Bootstrapping a literate configuration file
+
+** Bootstrapping
    The endgoal here is to have an easily shareable, readable, and reproducable emacs setup.
    When you clone this repository you'll have two main files: [[file:init.el][init.el]] and [[file:README.org][README.org]].
 
@@ -29,46 +31,59 @@ todo: need to add better complete support
       ;; finally byte-compile it
       (byte-compile-file (concat user-emacs-directory "init.el"))
     #+END_SRC
-    This code will load org mode, move specified code blocks from [[file:README.org][README.org]] to [[file:init.el][init.el]] and then byte compile it.
+    This code will load org mode, move specified code blocks from [[file:README.org][README.org]] to [[file:init.el][init.el]] and then byte compile it. 
 
-   #+BEGIN_SRC emacs-lisp :tangle yes
-     (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-           (bootstrap-version 3))
-       (unless (file-exists-p bootstrap-file)
-         (with-current-buffer
-             (url-retrieve-synchronously
-              "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-              'silent 'inhibit-cookies)
-           (goto-char (point-max))
-           (eval-print-last-sexp)))
-       (load bootstrap-file nil 'nomessage))
+*** [[file:README.org][README.org]]
+    This is where the main configuration goes. Any code blocks that have the =:tangle yes= will be used to construct the final 
+    init.el file through the function  =(org-babel-tangle)=. The initial processesing of [[file:README.org][README.org]] will be triggered by [[file:init.el][init.el]].
+    Subsequent init.el generations are through this =after-save-hook= on [[file:README.org][README.org]]
 
-     (straight-use-package 'use-package)
-     (require 'use-package)
-     (setq straight-use-package-by-default t)
-     (require 'bind-key)
-     (use-package org)
-   #+END_SRC
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (defun tangle-init ()
+        "If the current buffer is 'init.org' the code-blocks are
+      tangled, and the tangled file is compiled."
+        (when (equal (buffer-file-name)
+                     (expand-file-name (concat user-emacs-directory "README.org")))
+          ;; Avoid running hooks when tangling.
+          (let ((prog-mode-hook nil))
+            (org-babel-tangle "init.el")
+            (byte-compile-file (concat user-emacs-directory "init.el")))))
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun tangle-init ()
-    "If the current buffer is 'init.org' the code-blocks are
-  tangled, and the tangled file is compiled."
-    (when (equal (buffer-file-name)
-                 (expand-file-name (concat user-emacs-directory "README.org")))
-      ;; Avoid running hooks when tangling.
-      (let ((prog-mode-hook nil))
-        (org-babel-tangle "init.el")
-        (byte-compile-file (concat user-emacs-directory "init.el")))))
+      (add-hook 'after-save-hook 'tangle-init)
+    #+END_SRC
 
-  (add-hook 'after-save-hook 'tangle-init)
-#+END_SRC
+    We then load up a couple packages:
+      1. Fancy package manager [[https://github.com/raxod502/straight.el][straight.el]]
+      2. A nicer package configuration framework [[https://github.com/jwiegley/use-package][use-package]]
+      3. An updated version of [[https://orgmode.org/][org-mode]]
+
+      #+BEGIN_SRC emacs-lisp :tangle yes
+        (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+              (bootstrap-version 3))
+          (unless (file-exists-p bootstrap-file)
+            (with-current-buffer
+                (url-retrieve-synchronously
+                 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+                 'silent 'inhibit-cookies)
+              (goto-char (point-max))
+              (eval-print-last-sexp)))
+          (load bootstrap-file nil 'nomessage))
+
+        (straight-use-package 'use-package)
+        (require 'use-package)
+        (setq straight-use-package-by-default t)
+        (require 'bind-key)
+        (use-package org)
+      #+END_SRC
+**** TODO Fix =use-package= weirdness with =org-mode=
+**** TODO Add hook to automatically generate readme on save
 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (require 'ox-md)
   (use-package ox-gfm)
 #+END_SRC
 
+** Configuration
 Defining functions for computer specific configuration
 #+BEGIN_SRC emacs-lisp :tangle yes
   (defun system-is-workstation ()
@@ -148,3 +163,5 @@ Magit
 #+BEGIN_SRC emacs-lisp :tangle yes
   (use-package magit)
 #+END_SRC
+
+
