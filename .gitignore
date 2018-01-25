@@ -3,4 +3,5 @@
 # Whitelist select files
 !init.el
 !.gitignore
-!init.org
+!README.org
+!README.md

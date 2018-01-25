@@ -2,28 +2,16 @@
 #+OPTIONS: toc:4 h:4
 #+STARTUP: showeverything
 
+* Emacs Initialization File
+  #+PROPERTY: EXPORT_FILE_NAME README.md
+
 todo: need to add better complete support
 
-org-mode-tips: 
-Key Shortcut to Insert Source Code Markup
-To insert source code markup, press [< s Tab].
-Then, to insert your language's name, Alt+x complete-symbol [Ctrl+Alt+i]
+** Bootstrapping a literate configuration file
+   The endgoal here is to have an easily shareable, readable, and reproducable emacs setup
+*** Requirements
+    1. emacs that is bundled with org-mode v7.0.0
 
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun tangle-init ()
-    "If the current buffer is 'init.org' the code-blocks are
-  tangled, and the tangled file is compiled."
-    (when (equal (buffer-file-name)
-                 (expand-file-name (concat user-emacs-directory "init.org")))
-      ;; Avoid running hooks when tangling.
-      (let ((prog-mode-hook nil))
-        (org-babel-tangle)
-        (byte-compile-file (concat user-emacs-directory "init.el")))))
-
-  (add-hook 'after-save-hook 'tangle-init)
-#+END_SRC
-
-Bootstrap straight 
 #+BEGIN_SRC emacs-lisp :tangle yes
   (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
         (bootstrap-version 3))
@@ -37,6 +25,29 @@ Bootstrap straight
     (load bootstrap-file nil 'nomessage))
 
   (straight-use-package 'use-package)
+  (require 'use-package)
+  (setq straight-use-package-by-default t)
+  (require 'bind-key)
+  (use-package org)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (require 'ox-md)
+  (use-package ox-gfm)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (defun tangle-init ()
+    "If the current buffer is 'init.org' the code-blocks are
+  tangled, and the tangled file is compiled."
+    (when (equal (buffer-file-name)
+                 (expand-file-name (concat user-emacs-directory "README.org")))
+      ;; Avoid running hooks when tangling.
+      (let ((prog-mode-hook nil))
+        (org-babel-tangle "init.el")
+        (byte-compile-file (concat user-emacs-directory "init.el")))))
+
+  (add-hook 'after-save-hook 'tangle-init)
 #+END_SRC
 
 Defining functions for computer specific configuration
@@ -44,7 +55,7 @@ Defining functions for computer specific configuration
   (defun system-is-workstation ()
     (interactive)
     "Return true if the system we are running is my work desktop at Google"
-    (string-equal system-name "meshelton.nyc.corp.google.com")
+    (string-equal (system-name) "meshelton.nyc.corp.google.com")
     )
 #+END_SRC
 
@@ -98,19 +109,22 @@ Appearance
 
 Multiple Cursors
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package multiple-cursors)
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-^") 'mc/mark-all-like-this)
+  (use-package multiple-cursors
+    :bind (("C->" . 'mc/mark-next-like-this)
+           ("C-<" . 'mc/mark-previous-like-this)
+           ("C-^" . 'mc/mark-all-like-this)))
+
 #+END_SRC
 
 Visual Regular Expressions
 #+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package visual-regexp)
-  (use-package visual-regexp-steroids)
-  (define-key global-map (kbd "C-c C-r") 'vr/replace)
-  (define-key global-map (kbd "C-c C-q") 'vr/query-replace)
-  (define-key global-map (kbd "C-c C-m") 'vr/mc-mark)
+  (use-package visual-regexp
+    :bind (("C-c C-r" . 'vr/replace)
+           ("C-c C-q" . 'vr/query-replace)))
+  (use-package visual-regexp-steroids
+    :bind ("C-c C-m" . 'vr/mc-mark))
 #+END_SRC
 
-
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package magit)
+#+END_SRC
