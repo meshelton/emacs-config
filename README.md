@@ -1,39 +1,43 @@
-- [Emacs Initialization File](#orgf6009e2)
-  - [make `(C-c C-l)` use file completion when `file:` is used](#org4bb6101)
-  - [figure out how to quickly reindent code blocks](#org7d9ff16)
-  - [Bootstrapping](#org9aa8887)
-    - [[init.el](init.el)](#org8b70644)
-    - [[README.org](README.md)](#orgce4e807)
-      - [Fix `use-package` weirdness with `org-mode`](#orgffc891f)
-      - [Add hook to automatically generate readme on save](#orgbac4986)
-  - [Configuration](#orgd6428b5)
+- [Emacs Initialization File](#orgebc9551)
+  - [make `(C-c C-l)` use file completion when `file:` is used](#org8ced4ca)
+  - [figure out how to quickly reindent code blocks](#orgd5671ae)
+  - [Fix `use-package` weirdness with `org-mode`](#orgd62e584)
+  - [Bootstrapping](#org5561eca)
+    - [[init.el](init.el)](#org77868e7)
+    - [[README.org](README.md)](#orgbf364f5)
+  - [Configuration](#orgbd5e012)
 
 
 
-<a id="orgf6009e2"></a>
+<a id="orgebc9551"></a>
 
 # Emacs Initialization File
 
 
 
-<a id="org4bb6101"></a>
+<a id="org8ced4ca"></a>
 
 ## TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="org7d9ff16"></a>
+<a id="orgd5671ae"></a>
 
 ## TODO figure out how to quickly reindent code blocks
 
 
-<a id="org9aa8887"></a>
+<a id="orgd62e584"></a>
+
+## TODO Fix `use-package` weirdness with `org-mode`
+
+
+<a id="org5561eca"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org8b70644"></a>
+<a id="org77868e7"></a>
 
 ### [init.el](init.el)
 
@@ -59,7 +63,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="orgce4e807"></a>
+<a id="orgbf364f5"></a>
 
 ### [README.org](README.md)
 
@@ -67,7 +71,7 @@ This is where the main configuration goes. Any code blocks that have the `:tangl
 
 ```emacs-lisp
 (defun tangle-init ()
-  "If the current buffer is 'init.org' the code-blocks are
+  "If the current buffer is 'README.org' the code-blocks are
 tangled, and the tangled file is compiled."
   (when (equal (buffer-file-name)
                (expand-file-name (concat user-emacs-directory "README.org")))
@@ -104,23 +108,23 @@ We then load up a couple packages:
 (use-package org)
 ```
 
-
-<a id="orgffc891f"></a>
-
-#### TODO Fix `use-package` weirdness with `org-mode`
-
-
-<a id="orgbac4986"></a>
-
-#### TODO Add hook to automatically generate readme on save
+We also add an after save hook to automatically generate a new [README.md](README.md)
 
 ```emacs-lisp
 (require 'ox-md)
 (use-package ox-gfm)
+(defun export-readme ()
+  "If the current buffer is 'README.org' export it to 'README.md'"
+  (when (equal (buffer-file-name)
+               (expand-file-name (concat user-emacs-directory "README.org")))
+    (org-gfm-export-to-markdown)))
+(add-hook 'after-save-hook 'export-readme)
 ```
 
+Now we have a nice base to start from
 
-<a id="orgd6428b5"></a>
+
+<a id="orgbd5e012"></a>
 
 ## Configuration
 
