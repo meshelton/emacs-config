@@ -3,7 +3,6 @@
 #+STARTUP: showeverything
 
 * Emacs Initialization File
-  #+PROPERTY: EXPORT_FILE_NAME README.md
 
 ** TODO make =(C-c C-l)= use file completion when =file:= is used
 ** TODO figure out how to quickly reindent code blocks
@@ -34,11 +33,11 @@
     This code will load org mode, move specified code blocks from [[file:README.org][README.org]] to [[file:init.el][init.el]] and then byte compile it. 
 
 *** [[file:README.org][README.org]]
-    This is where the main configuration goes. Any code blocks that have the =:tangle yes= will be used to construct the final 
+    This is where the main configuration goes. Any code blocks that have the =:tangle ./init.el= will be used to construct the final 
     init.el file through the function  =(org-babel-tangle)=. The initial processesing of [[file:README.org][README.org]] will be triggered by [[file:init.el][init.el]].
     Subsequent init.el generations are through this =after-save-hook= on [[file:README.org][README.org]]
 
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (defun tangle-init ()
         "If the current buffer is 'README.org' the code-blocks are
       tangled, and the tangled file is compiled."
@@ -46,38 +45,40 @@
                      (expand-file-name (concat user-emacs-directory "README.org")))
           ;; Avoid running hooks when tangling.
           (let ((prog-mode-hook nil))
-            (org-babel-tangle "init.el")
+            (org-babel-tangle)
             (byte-compile-file (concat user-emacs-directory "init.el")))))
 
       (add-hook 'after-save-hook 'tangle-init)
     #+END_SRC
 
     We then load up a couple packages:
-     1. Fancy package manager [[https://github.com/raxod502/straight.el][straight.el]]
-     2. A nicer package configuration framework [[https://github.com/jwiegley/use-package][use-package]]
-     3. An updated version of [[https://orgmode.org/][org-mode]]
+     1. [[https://github.com/raxod502/straight.el][straight.el]] :: Fancy package manager
+     2. [[https://github.com/jwiegley/use-package][use-package]] :: A nicer package configuration framework
+     3. [[https://orgmode.org/][org-mode]] :: What this document is written using
 
-        #+BEGIN_SRC emacs-lisp :tangle yes
-         (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-               (bootstrap-version 3))
-           (unless (file-exists-p bootstrap-file)
-             (with-current-buffer
-                 (url-retrieve-synchronously
-                  "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-                  'silent 'inhibit-cookies)
-               (goto-char (point-max))
-               (eval-print-last-sexp)))
-           (load bootstrap-file nil 'nomessage))
+        #+BEGIN_SRC emacs-lisp :tangle ./init.el
+          (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+                (bootstrap-version 3))
+            (unless (file-exists-p bootstrap-file)
+              (with-current-buffer
+                  (url-retrieve-synchronously
+                   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+                   'silent 'inhibit-cookies)
+                (goto-char (point-max))
+                (eval-print-last-sexp)))
+            (load bootstrap-file nil 'nomessage))
 
-         (straight-use-package 'use-package)
-         (require 'use-package)
-         (setq straight-use-package-by-default t)
-         (require 'bind-key)
-         (use-package org)
+          (straight-use-package 'use-package)
+          (require 'use-package)
+          (setq straight-use-package-by-default t)
+          (require 'bind-key)
+          (use-package org
+            :bind ("C-c l" . 'org-store-link))
+
         #+END_SRC
 
      We also add an after save hook to automatically generate a new [[file:README.md][README.md]] 
-     #+BEGIN_SRC emacs-lisp :tangle yes
+     #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (require 'ox-md)
       (use-package ox-gfm)
       (defun export-readme ()
@@ -93,7 +94,7 @@
 ** Configuration
 
 *** Per System Configuration
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (defun system-is-workstation ()
         (interactive)
         "Return true if the system we are running is my work desktop at Google"
@@ -101,7 +102,7 @@
     #+END_SRC
 
 *** Personal Information
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (setq user-full-name "Michael Shelton"
             user-mail-address "michael.e.shelton@gmail.com")
       (if (system-is-workstation)
@@ -109,7 +110,7 @@
     #+END_SRC
 
 *** Backup
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
       (setq delete-old-versions -1)
       (setq version-control t)
@@ -119,7 +120,7 @@
     #+END_SRC
 
 *** Google specific emacs packages
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (if (system-is-workstation)
           (require 'google)
         (require 'p4-google)                ;; g4-annotate, improves find-file-at-point
@@ -134,7 +135,7 @@
     #+END_SRC
 
 *** Appearance
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (load-theme 'wombat 1)
       (global-linum-mode 0)
       (column-number-mode 1)
@@ -148,8 +149,7 @@
     #+END_SRC
 
 *** Multiple Cursors
-    A true killer feature, can really speed up editing
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (use-package multiple-cursors
         :bind (("C->" . 'mc/mark-next-like-this)
                ("C-<" . 'mc/mark-previous-like-this)
@@ -158,19 +158,16 @@
     #+END_SRC
 
 *** Visual Regular Expressions
-    Very nice to have
-    #+BEGIN_SRC emacs-lisp :tangle yes
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (use-package visual-regexp
-        :bind (("C-c C-r" . 'vr/replace)
-               ("C-c C-q" . 'vr/query-replace)))
+        :bind (("C-M-r" . 'vr/replace)
+               ("C-M-q" . 'vr/query-replace)))
       (use-package visual-regexp-steroids
-        :bind ("C-c C-m" . 'vr/mc-mark))
+        :bind ("C-M-m" . 'vr/mc-mark))
     #+END_SRC
 
 *** Magit
-    #+BEGIN_SRC emacs-lisp :tangle yes
-      (use-package magit)
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
+      (use-package magit
+        :bind ("C-x g" . 'magit-status))
     #+END_SRC
-
-
-

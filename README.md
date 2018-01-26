@@ -1,51 +1,50 @@
-- [Emacs Initialization File](#orgcb1d166)
-  - [make `(C-c C-l)` use file completion when `file:` is used](#orgd3f1555)
-  - [figure out how to quickly reindent code blocks](#orgc65bdea)
-  - [Fix `use-package` weirdness with `org-mode`](#orgc8554e1)
-  - [Bootstrapping](#org9319a91)
-    - [[init.el](init.el)](#orgfb4f00f)
-    - [[README.org](README.md)](#orgc81ee38)
-  - [Configuration](#org861a055)
-    - [Per System Configuration](#org426e8a3)
-    - [Personal Information](#orgd7aca95)
-    - [Backup](#org42918c2)
-    - [Google specific emacs packages](#org33c5482)
-    - [Appearance](#orged9a1e4)
-    - [Multiple Cursors](#org5bcc951)
-    - [Visual Regular Expressions](#org2519d00)
-    - [Magit](#org7907dc3)
+- [Emacs Initialization File](#org0e7dffe)
+  - [make `(C-c C-l)` use file completion when `file:` is used](#orgf4e80d8)
+  - [figure out how to quickly reindent code blocks](#org2903067)
+  - [Fix `use-package` weirdness with `org-mode`](#org69a1261)
+  - [Bootstrapping](#org661e16c)
+    - [[init.el](init.el)](#orgdab537f)
+    - [[README.org](README.md)](#org95ce340)
+  - [Configuration](#orgc1380fa)
+    - [Per System Configuration](#org0ba2aa7)
+    - [Personal Information](#org6144c52)
+    - [Backup](#org502bc88)
+    - [Google specific emacs packages](#orgffe4440)
+    - [Appearance](#orgac4035c)
+    - [Multiple Cursors](#org67b7521)
+    - [Visual Regular Expressions](#org549061d)
+    - [Magit](#orgee55c19)
 
 
 
-<a id="orgcb1d166"></a>
+<a id="org0e7dffe"></a>
 
 # Emacs Initialization File
 
 
-
-<a id="orgd3f1555"></a>
+<a id="orgf4e80d8"></a>
 
 ## TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="orgc65bdea"></a>
+<a id="org2903067"></a>
 
 ## TODO figure out how to quickly reindent code blocks
 
 
-<a id="orgc8554e1"></a>
+<a id="org69a1261"></a>
 
 ## TODO Fix `use-package` weirdness with `org-mode`
 
 
-<a id="org9319a91"></a>
+<a id="org661e16c"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="orgfb4f00f"></a>
+<a id="orgdab537f"></a>
 
 ### [init.el](init.el)
 
@@ -71,11 +70,11 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="orgc81ee38"></a>
+<a id="org95ce340"></a>
 
 ### [README.org](README.md)
 
-This is where the main configuration goes. Any code blocks that have the `:tangle yes` will be used to construct the final init.el file through the function `(org-babel-tangle)`. The initial processesing of [README.org](README.md) will be triggered by [init.el](init.el). Subsequent init.el generations are through this `after-save-hook` on [README.org](README.md)
+This is where the main configuration goes. Any code blocks that have the `:tangle ./init.el` will be used to construct the final init.el file through the function `(org-babel-tangle)`. The initial processesing of [README.org](README.md) will be triggered by [init.el](init.el). Subsequent init.el generations are through this `after-save-hook` on [README.org](README.md)
 
 ```emacs-lisp
 (defun tangle-init ()
@@ -85,7 +84,7 @@ tangled, and the tangled file is compiled."
                (expand-file-name (concat user-emacs-directory "README.org")))
     ;; Avoid running hooks when tangling.
     (let ((prog-mode-hook nil))
-      (org-babel-tangle "init.el")
+      (org-babel-tangle)
       (byte-compile-file (concat user-emacs-directory "init.el")))))
 
 (add-hook 'after-save-hook 'tangle-init)
@@ -93,9 +92,9 @@ tangled, and the tangled file is compiled."
 
 We then load up a couple packages:
 
-1.  Fancy package manager [straight.el](https://github.com/raxod502/straight.el)
-2.  A nicer package configuration framework [use-package](https://github.com/jwiegley/use-package)
-3.  An updated version of [org-mode](https://orgmode.org/)
+1.  [straight.el](https://github.com/raxod502/straight.el) :: Fancy package manager
+2.  [use-package](https://github.com/jwiegley/use-package) :: A nicer package configuration framework
+3.  [org-mode](https://orgmode.org/) :: What this document is written using
     
     ```emacs-lisp
     (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
@@ -113,7 +112,9 @@ We then load up a couple packages:
     (require 'use-package)
     (setq straight-use-package-by-default t)
     (require 'bind-key)
-    (use-package org)
+    (use-package org
+      :bind ("C-c l" . 'org-store-link))
+    
     ```
 
 We also add an after save hook to automatically generate a new [README.md](README.md)
@@ -130,12 +131,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org861a055"></a>
+<a id="orgc1380fa"></a>
 
 ## Configuration
 
 
-<a id="org426e8a3"></a>
+<a id="org0ba2aa7"></a>
 
 ### Per System Configuration
 
@@ -147,7 +148,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgd7aca95"></a>
+<a id="org6144c52"></a>
 
 ### Personal Information
 
@@ -159,7 +160,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org42918c2"></a>
+<a id="org502bc88"></a>
 
 ### Backup
 
@@ -173,7 +174,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org33c5482"></a>
+<a id="orgffe4440"></a>
 
 ### Google specific emacs packages
 
@@ -192,7 +193,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orged9a1e4"></a>
+<a id="orgac4035c"></a>
 
 ### Appearance
 
@@ -210,11 +211,9 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org5bcc951"></a>
+<a id="org67b7521"></a>
 
 ### Multiple Cursors
-
-A true killer feature, can really speed up editing
 
 ```emacs-lisp
 (use-package multiple-cursors
@@ -225,25 +224,24 @@ A true killer feature, can really speed up editing
 ```
 
 
-<a id="org2519d00"></a>
+<a id="org549061d"></a>
 
 ### Visual Regular Expressions
 
-Very nice to have
-
 ```emacs-lisp
 (use-package visual-regexp
-  :bind (("C-c C-r" . 'vr/replace)
-         ("C-c C-q" . 'vr/query-replace)))
+  :bind (("C-M-r" . 'vr/replace)
+         ("C-M-q" . 'vr/query-replace)))
 (use-package visual-regexp-steroids
-  :bind ("C-c C-m" . 'vr/mc-mark))
+  :bind ("C-M-m" . 'vr/mc-mark))
 ```
 
 
-<a id="org7907dc3"></a>
+<a id="orgee55c19"></a>
 
 ### Magit
 
 ```emacs-lisp
-(use-package magit)
+(use-package magit
+  :bind ("C-x g" . 'magit-status))
 ```
