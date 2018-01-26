@@ -1,43 +1,51 @@
-- [Emacs Initialization File](#orgebc9551)
-  - [make `(C-c C-l)` use file completion when `file:` is used](#org8ced4ca)
-  - [figure out how to quickly reindent code blocks](#orgd5671ae)
-  - [Fix `use-package` weirdness with `org-mode`](#orgd62e584)
-  - [Bootstrapping](#org5561eca)
-    - [[init.el](init.el)](#org77868e7)
-    - [[README.org](README.md)](#orgbf364f5)
-  - [Configuration](#orgbd5e012)
+- [Emacs Initialization File](#orgcb1d166)
+  - [make `(C-c C-l)` use file completion when `file:` is used](#orgd3f1555)
+  - [figure out how to quickly reindent code blocks](#orgc65bdea)
+  - [Fix `use-package` weirdness with `org-mode`](#orgc8554e1)
+  - [Bootstrapping](#org9319a91)
+    - [[init.el](init.el)](#orgfb4f00f)
+    - [[README.org](README.md)](#orgc81ee38)
+  - [Configuration](#org861a055)
+    - [Per System Configuration](#org426e8a3)
+    - [Personal Information](#orgd7aca95)
+    - [Backup](#org42918c2)
+    - [Google specific emacs packages](#org33c5482)
+    - [Appearance](#orged9a1e4)
+    - [Multiple Cursors](#org5bcc951)
+    - [Visual Regular Expressions](#org2519d00)
+    - [Magit](#org7907dc3)
 
 
 
-<a id="orgebc9551"></a>
+<a id="orgcb1d166"></a>
 
 # Emacs Initialization File
 
 
 
-<a id="org8ced4ca"></a>
+<a id="orgd3f1555"></a>
 
 ## TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="orgd5671ae"></a>
+<a id="orgc65bdea"></a>
 
 ## TODO figure out how to quickly reindent code blocks
 
 
-<a id="orgd62e584"></a>
+<a id="orgc8554e1"></a>
 
 ## TODO Fix `use-package` weirdness with `org-mode`
 
 
-<a id="org5561eca"></a>
+<a id="org9319a91"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org77868e7"></a>
+<a id="orgfb4f00f"></a>
 
 ### [init.el](init.el)
 
@@ -63,7 +71,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="orgbf364f5"></a>
+<a id="orgc81ee38"></a>
 
 ### [README.org](README.md)
 
@@ -88,25 +96,25 @@ We then load up a couple packages:
 1.  Fancy package manager [straight.el](https://github.com/raxod502/straight.el)
 2.  A nicer package configuration framework [use-package](https://github.com/jwiegley/use-package)
 3.  An updated version of [org-mode](https://orgmode.org/)
-
-```emacs-lisp
-(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-      (bootstrap-version 3))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(straight-use-package 'use-package)
-(require 'use-package)
-(setq straight-use-package-by-default t)
-(require 'bind-key)
-(use-package org)
-```
+    
+    ```emacs-lisp
+    (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+          (bootstrap-version 3))
+      (unless (file-exists-p bootstrap-file)
+        (with-current-buffer
+            (url-retrieve-synchronously
+             "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+             'silent 'inhibit-cookies)
+          (goto-char (point-max))
+          (eval-print-last-sexp)))
+      (load bootstrap-file nil 'nomessage))
+    
+    (straight-use-package 'use-package)
+    (require 'use-package)
+    (setq straight-use-package-by-default t)
+    (require 'bind-key)
+    (use-package org)
+    ```
 
 We also add an after save hook to automatically generate a new [README.md](README.md)
 
@@ -121,34 +129,39 @@ We also add an after save hook to automatically generate a new [README.md](READM
 (add-hook 'after-save-hook 'export-readme)
 ```
 
-Now we have a nice base to start from
 
-
-<a id="orgbd5e012"></a>
+<a id="org861a055"></a>
 
 ## Configuration
 
-Defining functions for computer specific configuration
+
+<a id="org426e8a3"></a>
+
+### Per System Configuration
 
 ```emacs-lisp
 (defun system-is-workstation ()
   (interactive)
   "Return true if the system we are running is my work desktop at Google"
-  (string-equal (system-name) "meshelton.nyc.corp.google.com")
-  )
+  (string-equal (system-name) "meshelton.nyc.corp.google.com"))
 ```
 
-Personal Information
+
+<a id="orgd7aca95"></a>
+
+### Personal Information
 
 ```emacs-lisp
 (setq user-full-name "Michael Shelton"
       user-mail-address "michael.e.shelton@gmail.com")
 (if (system-is-workstation)
-    (setq user-mail-address "meshelton@google.com")
-  )
+    (setq user-mail-address "meshelton@google.com"))
 ```
 
-Backup
+
+<a id="org42918c2"></a>
+
+### Backup
 
 ```emacs-lisp
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
@@ -159,7 +172,10 @@ Backup
 (setq backup-by-copying t)
 ```
 
-Google specific emacs packages
+
+<a id="org33c5482"></a>
+
+### Google specific emacs packages
 
 ```emacs-lisp
 (if (system-is-workstation)
@@ -175,7 +191,10 @@ Google specific emacs packages
   )
 ```
 
-Appearance
+
+<a id="orged9a1e4"></a>
+
+### Appearance
 
 ```emacs-lisp
 (load-theme 'wombat 1)
@@ -190,7 +209,12 @@ Appearance
 (setq compilation-scroll-output 'first-error)
 ```
 
-Multiple Cursors
+
+<a id="org5bcc951"></a>
+
+### Multiple Cursors
+
+A true killer feature, can really speed up editing
 
 ```emacs-lisp
 (use-package multiple-cursors
@@ -200,7 +224,12 @@ Multiple Cursors
 
 ```
 
-Visual Regular Expressions
+
+<a id="org2519d00"></a>
+
+### Visual Regular Expressions
+
+Very nice to have
 
 ```emacs-lisp
 (use-package visual-regexp
@@ -210,7 +239,10 @@ Visual Regular Expressions
   :bind ("C-c C-m" . 'vr/mc-mark))
 ```
 
-Magit
+
+<a id="org7907dc3"></a>
+
+### Magit
 
 ```emacs-lisp
 (use-package magit)

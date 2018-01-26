@@ -53,31 +53,31 @@
     #+END_SRC
 
     We then load up a couple packages:
-      1. Fancy package manager [[https://github.com/raxod502/straight.el][straight.el]]
-      2. A nicer package configuration framework [[https://github.com/jwiegley/use-package][use-package]]
-      3. An updated version of [[https://orgmode.org/][org-mode]]
+     1. Fancy package manager [[https://github.com/raxod502/straight.el][straight.el]]
+     2. A nicer package configuration framework [[https://github.com/jwiegley/use-package][use-package]]
+     3. An updated version of [[https://orgmode.org/][org-mode]]
 
-      #+BEGIN_SRC emacs-lisp :tangle yes
-        (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-              (bootstrap-version 3))
-          (unless (file-exists-p bootstrap-file)
-            (with-current-buffer
-                (url-retrieve-synchronously
-                 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-                 'silent 'inhibit-cookies)
-              (goto-char (point-max))
-              (eval-print-last-sexp)))
-          (load bootstrap-file nil 'nomessage))
+        #+BEGIN_SRC emacs-lisp :tangle yes
+         (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+               (bootstrap-version 3))
+           (unless (file-exists-p bootstrap-file)
+             (with-current-buffer
+                 (url-retrieve-synchronously
+                  "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+                  'silent 'inhibit-cookies)
+               (goto-char (point-max))
+               (eval-print-last-sexp)))
+           (load bootstrap-file nil 'nomessage))
 
-        (straight-use-package 'use-package)
-        (require 'use-package)
-        (setq straight-use-package-by-default t)
-        (require 'bind-key)
-        (use-package org)
-      #+END_SRC
-      
-    We also add an after save hook to automatically generate a new [[file:README.md][README.md]] 
-    #+BEGIN_SRC emacs-lisp :tangle yes
+         (straight-use-package 'use-package)
+         (require 'use-package)
+         (setq straight-use-package-by-default t)
+         (require 'bind-key)
+         (use-package org)
+        #+END_SRC
+
+     We also add an after save hook to automatically generate a new [[file:README.md][README.md]] 
+     #+BEGIN_SRC emacs-lisp :tangle yes
       (require 'ox-md)
       (use-package ox-gfm)
       (defun export-readme ()
@@ -86,88 +86,91 @@
                      (expand-file-name (concat user-emacs-directory "README.org")))
           (org-gfm-export-to-markdown)))
       (add-hook 'after-save-hook 'export-readme)
-    #+END_SRC
-    Now we have a nice base to start from
+     #+END_SRC
+
+
 
 ** Configuration
-Defining functions for computer specific configuration
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (defun system-is-workstation ()
-    (interactive)
-    "Return true if the system we are running is my work desktop at Google"
-    (string-equal (system-name) "meshelton.nyc.corp.google.com")
-    )
-#+END_SRC
 
-Personal Information
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq user-full-name "Michael Shelton"
-        user-mail-address "michael.e.shelton@gmail.com")
-  (if (system-is-workstation)
-      (setq user-mail-address "meshelton@google.com")
-    )
-#+END_SRC
+*** Per System Configuration
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (defun system-is-workstation ()
+        (interactive)
+        "Return true if the system we are running is my work desktop at Google"
+        (string-equal (system-name) "meshelton.nyc.corp.google.com"))
+    #+END_SRC
 
-Backup
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
-  (setq delete-old-versions -1)
-  (setq version-control t)
-  (setq vc-make-backup-files t)
-  (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
-  (setq backup-by-copying t)
-#+END_SRC
+*** Personal Information
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (setq user-full-name "Michael Shelton"
+            user-mail-address "michael.e.shelton@gmail.com")
+      (if (system-is-workstation)
+          (setq user-mail-address "meshelton@google.com"))
+    #+END_SRC
 
-Google specific emacs packages
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (if (system-is-workstation)
-      (require 'google)
-    (require 'p4-google)                ;; g4-annotate, improves find-file-at-point
-    (require 'compilation-colorization) ;; colorizes output of (i)grep
-    (require 'rotate-clients)           ;; google-rotate-client
-    (require 'rotate-among-files)       ;; google-rotate-among-files
-    (require 'googlemenu)               ;; handy Google menu bar
-    (require 'p4-files)                 ;; transparent support for Perforce filesystem
-    (require 'google3-build)            ;; support for blaze builds
-    (require 'csearch)                  ;; Search the whole Google code base.
-    )
-#+END_SRC
+*** Backup
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+      (setq delete-old-versions -1)
+      (setq version-control t)
+      (setq vc-make-backup-files t)
+      (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
+      (setq backup-by-copying t)
+    #+END_SRC
 
-Appearance
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (load-theme 'wombat 1)
-  (global-linum-mode 0)
-  (column-number-mode 1)
-  (line-number-mode 1)
-  (setq inhibit-startup-screen 1)
-  (show-paren-mode 1)
-  (tool-bar-mode -1)
-  (setq-default indent-tabs-mode nil)
-  (setq tab-width 2)
-  (setq compilation-scroll-output 'first-error)
-#+END_SRC
+*** Google specific emacs packages
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (if (system-is-workstation)
+          (require 'google)
+        (require 'p4-google)                ;; g4-annotate, improves find-file-at-point
+        (require 'compilation-colorization) ;; colorizes output of (i)grep
+        (require 'rotate-clients)           ;; google-rotate-client
+        (require 'rotate-among-files)       ;; google-rotate-among-files
+        (require 'googlemenu)               ;; handy Google menu bar
+        (require 'p4-files)                 ;; transparent support for Perforce filesystem
+        (require 'google3-build)            ;; support for blaze builds
+        (require 'csearch)                  ;; Search the whole Google code base.
+        )
+    #+END_SRC
 
-Multiple Cursors
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package multiple-cursors
-    :bind (("C->" . 'mc/mark-next-like-this)
-           ("C-<" . 'mc/mark-previous-like-this)
-           ("C-^" . 'mc/mark-all-like-this)))
+*** Appearance
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (load-theme 'wombat 1)
+      (global-linum-mode 0)
+      (column-number-mode 1)
+      (line-number-mode 1)
+      (setq inhibit-startup-screen 1)
+      (show-paren-mode 1)
+      (tool-bar-mode -1)
+      (setq-default indent-tabs-mode nil)
+      (setq tab-width 2)
+      (setq compilation-scroll-output 'first-error)
+    #+END_SRC
 
-#+END_SRC
+*** Multiple Cursors
+    A true killer feature, can really speed up editing
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (use-package multiple-cursors
+        :bind (("C->" . 'mc/mark-next-like-this)
+               ("C-<" . 'mc/mark-previous-like-this)
+               ("C-^" . 'mc/mark-all-like-this)))
 
-Visual Regular Expressions
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package visual-regexp
-    :bind (("C-c C-r" . 'vr/replace)
-           ("C-c C-q" . 'vr/query-replace)))
-  (use-package visual-regexp-steroids
-    :bind ("C-c C-m" . 'vr/mc-mark))
-#+END_SRC
+    #+END_SRC
 
-Magit
-#+BEGIN_SRC emacs-lisp :tangle yes
-  (use-package magit)
-#+END_SRC
+*** Visual Regular Expressions
+    Very nice to have
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (use-package visual-regexp
+        :bind (("C-c C-r" . 'vr/replace)
+               ("C-c C-q" . 'vr/query-replace)))
+      (use-package visual-regexp-steroids
+        :bind ("C-c C-m" . 'vr/mc-mark))
+    #+END_SRC
+
+*** Magit
+    #+BEGIN_SRC emacs-lisp :tangle yes
+      (use-package magit)
+    #+END_SRC
+
 
 
