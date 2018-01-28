@@ -1,50 +1,51 @@
-- [Emacs Initialization File](#org0e7dffe)
-  - [make `(C-c C-l)` use file completion when `file:` is used](#orgf4e80d8)
-  - [figure out how to quickly reindent code blocks](#org2903067)
-  - [Fix `use-package` weirdness with `org-mode`](#org69a1261)
-  - [Bootstrapping](#org661e16c)
-    - [[init.el](init.el)](#orgdab537f)
-    - [[README.org](README.md)](#org95ce340)
-  - [Configuration](#orgc1380fa)
-    - [Per System Configuration](#org0ba2aa7)
-    - [Personal Information](#org6144c52)
-    - [Backup](#org502bc88)
-    - [Google specific emacs packages](#orgffe4440)
-    - [Appearance](#orgac4035c)
-    - [Multiple Cursors](#org67b7521)
-    - [Visual Regular Expressions](#org549061d)
-    - [Magit](#orgee55c19)
+- [Emacs Initialization File](#org099e678)
+  - [make `(C-c C-l)` use file completion when `file:` is used](#org30f6f0b)
+  - [figure out how to quickly reindent code blocks](#org8485f19)
+  - [Fix `use-package` weirdness with `org-mode`](#org8d3e6ae)
+  - [Bootstrapping](#orgb51eb23)
+    - [[init.el](init.el)](#org6bfd77a)
+    - [[README.org](README.md)](#org613d085)
+  - [Configuration](#org295d552)
+    - [Per System Configuration](#org91eb5a4)
+    - [Personal Information](#orgb2f6c2d)
+    - [Backup](#orga81c7b9)
+    - [Google specific emacs packages](#org58eeada)
+    - [Appearance](#orged759ac)
+    - [Multiple Cursors](#orgdaf0466)
+    - [Visual Regular Expressions](#orgf3785b9)
+    - [Magit](#org72a8349)
+    - [Helm](#orgb10ba40)
 
 
 
-<a id="org0e7dffe"></a>
+<a id="org099e678"></a>
 
 # Emacs Initialization File
 
 
-<a id="orgf4e80d8"></a>
+<a id="org30f6f0b"></a>
 
 ## TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="org2903067"></a>
+<a id="org8485f19"></a>
 
 ## TODO figure out how to quickly reindent code blocks
 
 
-<a id="org69a1261"></a>
+<a id="org8d3e6ae"></a>
 
 ## TODO Fix `use-package` weirdness with `org-mode`
 
 
-<a id="org661e16c"></a>
+<a id="orgb51eb23"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="orgdab537f"></a>
+<a id="org6bfd77a"></a>
 
 ### [init.el](init.el)
 
@@ -70,7 +71,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="org95ce340"></a>
+<a id="org613d085"></a>
 
 ### [README.org](README.md)
 
@@ -131,12 +132,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgc1380fa"></a>
+<a id="org295d552"></a>
 
 ## Configuration
 
 
-<a id="org0ba2aa7"></a>
+<a id="org91eb5a4"></a>
 
 ### Per System Configuration
 
@@ -148,7 +149,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org6144c52"></a>
+<a id="orgb2f6c2d"></a>
 
 ### Personal Information
 
@@ -160,7 +161,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org502bc88"></a>
+<a id="orga81c7b9"></a>
 
 ### Backup
 
@@ -174,7 +175,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgffe4440"></a>
+<a id="org58eeada"></a>
 
 ### Google specific emacs packages
 
@@ -193,7 +194,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgac4035c"></a>
+<a id="orged759ac"></a>
 
 ### Appearance
 
@@ -211,7 +212,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org67b7521"></a>
+<a id="orgdaf0466"></a>
 
 ### Multiple Cursors
 
@@ -224,7 +225,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org549061d"></a>
+<a id="orgf3785b9"></a>
 
 ### Visual Regular Expressions
 
@@ -237,11 +238,51 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgee55c19"></a>
+<a id="org72a8349"></a>
 
 ### Magit
 
 ```emacs-lisp
 (use-package magit
   :bind ("C-x g" . 'magit-status))
+```
+
+
+<a id="orgb10ba40"></a>
+
+### Helm
+
+```emacs-lisp
+(use-package helm
+  :diminish helm-mode
+  :init
+  (progn
+    (require 'helm-config)
+    (setq helm-candidate-number-limit 100)
+    ;; From https://gist.github.com/antifuchs/9238468
+    (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
+          helm-input-idle-delay 0.01  ; this actually updates things
+                                        ; reeeelatively quickly.
+          helm-yas-display-key-on-candidate t
+          helm-quick-update t
+          helm-M-x-requires-pattern nil
+          helm-ff-skip-boring-files t)
+    (helm-mode))
+  :bind (("C-c h" . helm-mini)
+         ("C-h a" . helm-apropos)
+         ("C-x C-b" . helm-buffers-list)
+         ("C-x b" . helm-buffers-list)
+         ("M-y" . helm-show-kill-ring)
+         ("M-x" . helm-M-x)
+         ("C-x c o" . helm-occur)
+         ("C-x c s" . helm-swoop)
+         ("C-x c y" . helm-yas-complete)
+         ("C-x c Y" . helm-yas-create-snippet-on-region)
+         ("C-x c b" . my/helm-do-grep-book-notes)
+         ("C-x c SPC" . helm-all-mark-rings)))
+
+(use-package helm-descbinds
+  :defer t
+  :bind (("C-h b" . helm-descbinds)
+         ("C-h w" . helm-descbinds)))
 ```
