@@ -1,37 +1,37 @@
-- [Emacs Initialization File](#orge02fea8)
-  - [Bootstrapping](#org9c14f2a)
-    - [[init.el](init.el)](#org22c6586)
-    - [[README.org](README.md)](#orgf2e984a)
-  - [Configuration](#org19e2d41)
-    - [Per System Configuration](#org42f5b3e)
-    - [Personal Information](#orgaf382ff)
-    - [Backup](#orgf4fe1a1)
-    - [Google specific emacs packages](#org4fa4fdf)
-    - [Appearance](#org7d3d55d)
-    - [Multiple Cursors](#org10f2822)
-    - [Visual Regular Expressions](#org0893f48)
-    - [Magit](#orgeb2bdd1)
-    - [Helm](#org297a14d)
-  - [s](#org8cb6ead)
-    - [make `(C-c C-l)` use file completion when `file:` is used](#orga910f57)
-    - [figure out how to quickly reindent code blocks](#org1983c53)
-    - [Figure out how to load org from straight before anything else](#orge4798f6)
+- [Emacs Initialization File](#orga201e63)
+  - [Bootstrapping](#org340f30c)
+    - [[init.el](init.el)](#org2fdba0f)
+    - [[README.org](README.md)](#orgb364fa4)
+  - [Configuration](#org7670566)
+    - [Per System Configuration](#org2889c6d)
+    - [Personal Information](#org47b8d26)
+    - [Backup](#org59b9d77)
+    - [Google specific emacs packages](#orgaabb1b5)
+    - [Appearance](#org01358d9)
+    - [Multiple Cursors](#org4e4f06b)
+    - [Visual Regular Expressions](#org05bc394)
+    - [Magit](#org0028902)
+    - [Helm](#orgcdbc646)
+  - [s](#org0c8305b)
+    - [make `(C-c C-l)` use file completion when `file:` is used](#org2fdbd8a)
+    - [figure out how to quickly reindent code blocks](#orgbab9ff2)
+    - [Figure out how to load org from straight before anything else](#orgd51ffab)
 
 
 
-<a id="orge02fea8"></a>
+<a id="orga201e63"></a>
 
 # Emacs Initialization File
 
 
-<a id="org9c14f2a"></a>
+<a id="org340f30c"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org22c6586"></a>
+<a id="org2fdba0f"></a>
 
 ### [init.el](init.el)
 
@@ -57,7 +57,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="orgf2e984a"></a>
+<a id="orgb364fa4"></a>
 
 ### [README.org](README.md)
 
@@ -130,12 +130,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org19e2d41"></a>
+<a id="org7670566"></a>
 
 ## Configuration
 
 
-<a id="org42f5b3e"></a>
+<a id="org2889c6d"></a>
 
 ### Per System Configuration
 
@@ -147,7 +147,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgaf382ff"></a>
+<a id="org47b8d26"></a>
 
 ### Personal Information
 
@@ -159,7 +159,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgf4fe1a1"></a>
+<a id="org59b9d77"></a>
 
 ### Backup
 
@@ -173,13 +173,13 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org4fa4fdf"></a>
+<a id="orgaabb1b5"></a>
 
 ### Google specific emacs packages
 
 ```emacs-lisp
-(if (system-is-workstation)
-    (require 'google)
+(when (system-is-workstation)
+  (require 'google)
   (require 'p4-google)                ;; g4-annotate, improves find-file-at-point
   (require 'compilation-colorization) ;; colorizes output of (i)grep
   (require 'rotate-clients)           ;; google-rotate-client
@@ -187,12 +187,11 @@ We also add an after save hook to automatically generate a new [README.md](READM
   (require 'googlemenu)               ;; handy Google menu bar
   (require 'p4-files)                 ;; transparent support for Perforce filesystem
   (require 'google3-build)            ;; support for blaze builds
-  (require 'csearch)                  ;; Search the whole Google code base.
-  )
+  (require 'csearch))                 ;; Search the whole Google code base.
 ```
 
 
-<a id="org7d3d55d"></a>
+<a id="org01358d9"></a>
 
 ### Appearance
 
@@ -210,7 +209,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org10f2822"></a>
+<a id="org4e4f06b"></a>
 
 ### Multiple Cursors
 
@@ -223,7 +222,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org0893f48"></a>
+<a id="org05bc394"></a>
 
 ### Visual Regular Expressions
 
@@ -236,7 +235,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgeb2bdd1"></a>
+<a id="org0028902"></a>
 
 ### Magit
 
@@ -246,7 +245,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org297a14d"></a>
+<a id="orgcdbc646"></a>
 
 ### Helm
 
@@ -286,21 +285,21 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org8cb6ead"></a>
+<a id="org0c8305b"></a>
 
 ## TODO s
 
 
-<a id="orga910f57"></a>
+<a id="org2fdbd8a"></a>
 
 ### TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="org1983c53"></a>
+<a id="orgbab9ff2"></a>
 
 ### TODO figure out how to quickly reindent code blocks
 
 
-<a id="orge4798f6"></a>
+<a id="orgd51ffab"></a>
 
 ### TODO Figure out how to load org from straight before anything else

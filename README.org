@@ -124,8 +124,8 @@
 
 *** Google specific emacs packages
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
-      (if (system-is-workstation)
-          (require 'google)
+      (when (system-is-workstation)
+        (require 'google)
         (require 'p4-google)                ;; g4-annotate, improves find-file-at-point
         (require 'compilation-colorization) ;; colorizes output of (i)grep
         (require 'rotate-clients)           ;; google-rotate-client
@@ -133,8 +133,7 @@
         (require 'googlemenu)               ;; handy Google menu bar
         (require 'p4-files)                 ;; transparent support for Perforce filesystem
         (require 'google3-build)            ;; support for blaze builds
-        (require 'csearch)                  ;; Search the whole Google code base.
-        )
+        (require 'csearch))                 ;; Search the whole Google code base.
     #+END_SRC
 
 *** Appearance
