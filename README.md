@@ -1,51 +1,37 @@
-- [Emacs Initialization File](#org099e678)
-  - [make `(C-c C-l)` use file completion when `file:` is used](#org30f6f0b)
-  - [figure out how to quickly reindent code blocks](#org8485f19)
-  - [Fix `use-package` weirdness with `org-mode`](#org8d3e6ae)
-  - [Bootstrapping](#orgb51eb23)
-    - [[init.el](init.el)](#org6bfd77a)
-    - [[README.org](README.md)](#org613d085)
-  - [Configuration](#org295d552)
-    - [Per System Configuration](#org91eb5a4)
-    - [Personal Information](#orgb2f6c2d)
-    - [Backup](#orga81c7b9)
-    - [Google specific emacs packages](#org58eeada)
-    - [Appearance](#orged759ac)
-    - [Multiple Cursors](#orgdaf0466)
-    - [Visual Regular Expressions](#orgf3785b9)
-    - [Magit](#org72a8349)
-    - [Helm](#orgb10ba40)
+- [Emacs Initialization File](#orge02fea8)
+  - [Bootstrapping](#org9c14f2a)
+    - [[init.el](init.el)](#org22c6586)
+    - [[README.org](README.md)](#orgf2e984a)
+  - [Configuration](#org19e2d41)
+    - [Per System Configuration](#org42f5b3e)
+    - [Personal Information](#orgaf382ff)
+    - [Backup](#orgf4fe1a1)
+    - [Google specific emacs packages](#org4fa4fdf)
+    - [Appearance](#org7d3d55d)
+    - [Multiple Cursors](#org10f2822)
+    - [Visual Regular Expressions](#org0893f48)
+    - [Magit](#orgeb2bdd1)
+    - [Helm](#org297a14d)
+  - [s](#org8cb6ead)
+    - [make `(C-c C-l)` use file completion when `file:` is used](#orga910f57)
+    - [figure out how to quickly reindent code blocks](#org1983c53)
+    - [Figure out how to load org from straight before anything else](#orge4798f6)
 
 
 
-<a id="org099e678"></a>
+<a id="orge02fea8"></a>
 
 # Emacs Initialization File
 
 
-<a id="org30f6f0b"></a>
-
-## TODO make `(C-c C-l)` use file completion when `file:` is used
-
-
-<a id="org8485f19"></a>
-
-## TODO figure out how to quickly reindent code blocks
-
-
-<a id="org8d3e6ae"></a>
-
-## TODO Fix `use-package` weirdness with `org-mode`
-
-
-<a id="orgb51eb23"></a>
+<a id="org9c14f2a"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org6bfd77a"></a>
+<a id="org22c6586"></a>
 
 ### [init.el](init.el)
 
@@ -71,11 +57,50 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="org613d085"></a>
+<a id="orgf2e984a"></a>
 
 ### [README.org](README.md)
 
-This is where the main configuration goes. Any code blocks that have the `:tangle ./init.el` will be used to construct the final init.el file through the function `(org-babel-tangle)`. The initial processesing of [README.org](README.md) will be triggered by [init.el](init.el). Subsequent init.el generations are through this `after-save-hook` on [README.org](README.md)
+This is where the main configuration goes. Any code blocks that have the `:tangle ./init.el` will be used to construct the final init.el file through the function `(org-babel-tangle)`. The initial processesing of [README.org](README.md) will be triggered by [init.el](init.el).
+
+First we try to load org installed by straight before we get the system version of org. Maybe works?
+
+```emacs-lisp
+(let ((default-directory (concat user-emacs-directory "straight/repos/org")))
+  (setq load-path
+        (append
+         (let ((load-path  (copy-sequence load-path))) ;; Shadow
+           (normal-top-level-add-subdirs-to-load-path))
+         load-path)))
+```
+
+Then we load up a couple packages:
+
+1.  [straight.el](https://github.com/raxod502/straight.el) :: Fancy package manager
+2.  [use-package](https://github.com/jwiegley/use-package) :: A nicer package configuration framework
+3.  [org-mode](https://orgmode.org/) :: A package for literate programming and so much more
+
+```emacs-lisp
+(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+      (bootstrap-version 3))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+(require 'use-package)
+(setq straight-use-package-by-default t)
+(require 'bind-key)
+(use-package org
+  :bind ("C-c l" . 'org-store-link))
+```
+
+Subsequent init.el generations are through this `after-save-hook` on [README.org](README.md)
 
 ```emacs-lisp
 (defun tangle-init ()
@@ -91,33 +116,6 @@ tangled, and the tangled file is compiled."
 (add-hook 'after-save-hook 'tangle-init)
 ```
 
-We then load up a couple packages:
-
-1.  [straight.el](https://github.com/raxod502/straight.el) :: Fancy package manager
-2.  [use-package](https://github.com/jwiegley/use-package) :: A nicer package configuration framework
-3.  [org-mode](https://orgmode.org/) :: What this document is written using
-    
-    ```emacs-lisp
-    (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-          (bootstrap-version 3))
-      (unless (file-exists-p bootstrap-file)
-        (with-current-buffer
-            (url-retrieve-synchronously
-             "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-             'silent 'inhibit-cookies)
-          (goto-char (point-max))
-          (eval-print-last-sexp)))
-      (load bootstrap-file nil 'nomessage))
-    
-    (straight-use-package 'use-package)
-    (require 'use-package)
-    (setq straight-use-package-by-default t)
-    (require 'bind-key)
-    (use-package org
-      :bind ("C-c l" . 'org-store-link))
-    
-    ```
-
 We also add an after save hook to automatically generate a new [README.md](README.md)
 
 ```emacs-lisp
@@ -132,12 +130,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org295d552"></a>
+<a id="org19e2d41"></a>
 
 ## Configuration
 
 
-<a id="org91eb5a4"></a>
+<a id="org42f5b3e"></a>
 
 ### Per System Configuration
 
@@ -149,7 +147,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgb2f6c2d"></a>
+<a id="orgaf382ff"></a>
 
 ### Personal Information
 
@@ -161,7 +159,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orga81c7b9"></a>
+<a id="orgf4fe1a1"></a>
 
 ### Backup
 
@@ -175,7 +173,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org58eeada"></a>
+<a id="org4fa4fdf"></a>
 
 ### Google specific emacs packages
 
@@ -194,7 +192,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orged759ac"></a>
+<a id="org7d3d55d"></a>
 
 ### Appearance
 
@@ -212,7 +210,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgdaf0466"></a>
+<a id="org10f2822"></a>
 
 ### Multiple Cursors
 
@@ -225,7 +223,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgf3785b9"></a>
+<a id="org0893f48"></a>
 
 ### Visual Regular Expressions
 
@@ -238,7 +236,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org72a8349"></a>
+<a id="orgeb2bdd1"></a>
 
 ### Magit
 
@@ -248,7 +246,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgb10ba40"></a>
+<a id="org297a14d"></a>
 
 ### Helm
 
@@ -286,3 +284,23 @@ We also add an after save hook to automatically generate a new [README.md](READM
   :bind (("C-h b" . helm-descbinds)
          ("C-h w" . helm-descbinds)))
 ```
+
+
+<a id="org8cb6ead"></a>
+
+## TODO s
+
+
+<a id="orga910f57"></a>
+
+### TODO make `(C-c C-l)` use file completion when `file:` is used
+
+
+<a id="org1983c53"></a>
+
+### TODO figure out how to quickly reindent code blocks
+
+
+<a id="orge4798f6"></a>
+
+### TODO Figure out how to load org from straight before anything else

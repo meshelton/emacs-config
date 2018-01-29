@@ -3,10 +3,6 @@
 #+STARTUP: showeverything
 
 * Emacs Initialization File
-
-** TODO make =(C-c C-l)= use file completion when =file:= is used
-** TODO figure out how to quickly reindent code blocks
-** TODO Fix =use-package= weirdness with =org-mode=
  
 ** Bootstrapping
    The endgoal here is to have an easily shareable, readable, and reproducable emacs setup.
@@ -35,8 +31,43 @@
 *** [[file:README.org][README.org]]
     This is where the main configuration goes. Any code blocks that have the =:tangle ./init.el= will be used to construct the final 
     init.el file through the function  =(org-babel-tangle)=. The initial processesing of [[file:README.org][README.org]] will be triggered by [[file:init.el][init.el]].
-    Subsequent init.el generations are through this =after-save-hook= on [[file:README.org][README.org]]
+    
+    First we try to load org installed by straight before we get the system version of org. Maybe works?
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
+      (let ((default-directory (concat user-emacs-directory "straight/repos/org")))
+        (setq load-path
+              (append
+               (let ((load-path  (copy-sequence load-path))) ;; Shadow
+                 (normal-top-level-add-subdirs-to-load-path))
+               load-path)))
+    #+END_SRC
 
+    Then we load up a couple packages:
+    1. [[https://github.com/raxod502/straight.el][straight.el]] :: Fancy package manager
+    2. [[https://github.com/jwiegley/use-package][use-package]] :: A nicer package configuration framework
+    3. [[https://orgmode.org/][org-mode]] :: A package for literate programming and so much more
+
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
+      (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+            (bootstrap-version 3))
+        (unless (file-exists-p bootstrap-file)
+          (with-current-buffer
+              (url-retrieve-synchronously
+               "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+               'silent 'inhibit-cookies)
+            (goto-char (point-max))
+            (eval-print-last-sexp)))
+        (load bootstrap-file nil 'nomessage))
+
+      (straight-use-package 'use-package)
+      (require 'use-package)
+      (setq straight-use-package-by-default t)
+      (require 'bind-key)
+      (use-package org
+        :bind ("C-c l" . 'org-store-link))
+    #+END_SRC
+
+    Subsequent init.el generations are through this =after-save-hook= on [[file:README.org][README.org]]
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (defun tangle-init ()
         "If the current buffer is 'README.org' the code-blocks are
@@ -51,34 +82,8 @@
       (add-hook 'after-save-hook 'tangle-init)
     #+END_SRC
 
-    We then load up a couple packages:
-     1. [[https://github.com/raxod502/straight.el][straight.el]] :: Fancy package manager
-     2. [[https://github.com/jwiegley/use-package][use-package]] :: A nicer package configuration framework
-     3. [[https://orgmode.org/][org-mode]] :: What this document is written using
-
-        #+BEGIN_SRC emacs-lisp :tangle ./init.el
-          (let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-                (bootstrap-version 3))
-            (unless (file-exists-p bootstrap-file)
-              (with-current-buffer
-                  (url-retrieve-synchronously
-                   "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-                   'silent 'inhibit-cookies)
-                (goto-char (point-max))
-                (eval-print-last-sexp)))
-            (load bootstrap-file nil 'nomessage))
-
-          (straight-use-package 'use-package)
-          (require 'use-package)
-          (setq straight-use-package-by-default t)
-          (require 'bind-key)
-          (use-package org
-            :bind ("C-c l" . 'org-store-link))
-
-        #+END_SRC
-
-     We also add an after save hook to automatically generate a new [[file:README.md][README.md]] 
-     #+BEGIN_SRC emacs-lisp :tangle ./init.el
+    We also add an after save hook to automatically generate a new [[file:README.md][README.md]] 
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (require 'ox-md)
       (use-package ox-gfm)
       (defun export-readme ()
@@ -87,9 +92,7 @@
                      (expand-file-name (concat user-emacs-directory "README.org")))
           (org-gfm-export-to-markdown)))
       (add-hook 'after-save-hook 'export-readme)
-     #+END_SRC
-
-
+    #+END_SRC
 
 ** Configuration
 
@@ -208,3 +211,8 @@
                ("C-h w" . helm-descbinds)))
     #+END_SRC
 
+** TODOs
+
+*** TODO make =(C-c C-l)= use file completion when =file:= is used
+*** TODO figure out how to quickly reindent code blocks
+*** TODO Figure out how to load org from straight before anything else
