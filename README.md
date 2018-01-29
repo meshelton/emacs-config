@@ -1,37 +1,38 @@
-- [Emacs Initialization File](#orga201e63)
-  - [Bootstrapping](#org340f30c)
-    - [[init.el](init.el)](#org2fdba0f)
-    - [[README.org](README.md)](#orgb364fa4)
-  - [Configuration](#org7670566)
-    - [Per System Configuration](#org2889c6d)
-    - [Personal Information](#org47b8d26)
-    - [Backup](#org59b9d77)
-    - [Google specific emacs packages](#orgaabb1b5)
-    - [Appearance](#org01358d9)
-    - [Multiple Cursors](#org4e4f06b)
-    - [Visual Regular Expressions](#org05bc394)
-    - [Magit](#org0028902)
-    - [Helm](#orgcdbc646)
-  - [s](#org0c8305b)
-    - [make `(C-c C-l)` use file completion when `file:` is used](#org2fdbd8a)
-    - [figure out how to quickly reindent code blocks](#orgbab9ff2)
-    - [Figure out how to load org from straight before anything else](#orgd51ffab)
+- [Emacs Initialization File](#org10975d6)
+  - [Bootstrapping](#org3849b85)
+    - [[init.el](init.el)](#orge9dedd1)
+    - [[README.org](README.md)](#orgeccb9fd)
+  - [Configuration](#org25d41c5)
+    - [Per System Configuration](#orge9ee314)
+    - [Personal Information](#orge0fe3d5)
+    - [Backup](#orgd46d542)
+    - [Google specific emacs packages](#org7820bdf)
+    - [Appearance](#orgaddcd28)
+    - [Multiple Cursors](#org326600a)
+    - [Visual Regular Expressions](#org7b48e13)
+    - [Magit](#org2d8215d)
+    - [Helm](#orgf944b6b)
+  - [s](#orgc24ffbb)
+    - [make `(C-c C-l)` use file completion when `file:` is used](#org483b177)
+    - [figure out how to quickly reindent code blocks](#org561e588)
+    - [Figure out how to load org from straight before anything else](#org1857b04)
+    - [remove straight :(](#org90f4ae0)
 
 
 
-<a id="orga201e63"></a>
+<a id="org10975d6"></a>
 
 # Emacs Initialization File
 
 
-<a id="org340f30c"></a>
+<a id="org3849b85"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org2fdba0f"></a>
+<a id="orge9dedd1"></a>
 
 ### [init.el](init.el)
 
@@ -57,22 +58,11 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="orgb364fa4"></a>
+<a id="orgeccb9fd"></a>
 
 ### [README.org](README.md)
 
 This is where the main configuration goes. Any code blocks that have the `:tangle ./init.el` will be used to construct the final init.el file through the function `(org-babel-tangle)`. The initial processesing of [README.org](README.md) will be triggered by [init.el](init.el).
-
-First we try to load org installed by straight before we get the system version of org. Maybe works?
-
-```emacs-lisp
-(let ((default-directory (concat user-emacs-directory "straight/repos/org")))
-  (setq load-path
-        (append
-         (let ((load-path  (copy-sequence load-path))) ;; Shadow
-           (normal-top-level-add-subdirs-to-load-path))
-         load-path)))
-```
 
 Then we load up a couple packages:
 
@@ -91,12 +81,12 @@ Then we load up a couple packages:
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
-
 (straight-use-package 'use-package)
 (require 'use-package)
 (setq straight-use-package-by-default t)
 (require 'bind-key)
 (use-package org
+  :load-path "straight/repos/org"
   :bind ("C-c l" . 'org-store-link))
 ```
 
@@ -130,12 +120,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org7670566"></a>
+<a id="org25d41c5"></a>
 
 ## Configuration
 
 
-<a id="org2889c6d"></a>
+<a id="orge9ee314"></a>
 
 ### Per System Configuration
 
@@ -147,7 +137,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org47b8d26"></a>
+<a id="orge0fe3d5"></a>
 
 ### Personal Information
 
@@ -159,7 +149,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org59b9d77"></a>
+<a id="orgd46d542"></a>
 
 ### Backup
 
@@ -173,7 +163,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgaabb1b5"></a>
+<a id="org7820bdf"></a>
 
 ### Google specific emacs packages
 
@@ -191,7 +181,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org01358d9"></a>
+<a id="orgaddcd28"></a>
 
 ### Appearance
 
@@ -209,7 +199,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org4e4f06b"></a>
+<a id="org326600a"></a>
 
 ### Multiple Cursors
 
@@ -222,7 +212,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org05bc394"></a>
+<a id="org7b48e13"></a>
 
 ### Visual Regular Expressions
 
@@ -235,7 +225,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org0028902"></a>
+<a id="org2d8215d"></a>
 
 ### Magit
 
@@ -245,7 +235,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgcdbc646"></a>
+<a id="orgf944b6b"></a>
 
 ### Helm
 
@@ -285,21 +275,26 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org0c8305b"></a>
+<a id="orgc24ffbb"></a>
 
 ## TODO s
 
 
-<a id="org2fdbd8a"></a>
+<a id="org483b177"></a>
 
 ### TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="orgbab9ff2"></a>
+<a id="org561e588"></a>
 
 ### TODO figure out how to quickly reindent code blocks
 
 
-<a id="orgd51ffab"></a>
+<a id="org1857b04"></a>
 
 ### TODO Figure out how to load org from straight before anything else
+
+
+<a id="org90f4ae0"></a>
+
+### TODO remove straight :(

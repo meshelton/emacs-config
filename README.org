@@ -31,16 +31,6 @@
 *** [[file:README.org][README.org]]
     This is where the main configuration goes. Any code blocks that have the =:tangle ./init.el= will be used to construct the final 
     init.el file through the function  =(org-babel-tangle)=. The initial processesing of [[file:README.org][README.org]] will be triggered by [[file:init.el][init.el]].
-    
-    First we try to load org installed by straight before we get the system version of org. Maybe works?
-    #+BEGIN_SRC emacs-lisp :tangle ./init.el
-      (let ((default-directory (concat user-emacs-directory "straight/repos/org")))
-        (setq load-path
-              (append
-               (let ((load-path  (copy-sequence load-path))) ;; Shadow
-                 (normal-top-level-add-subdirs-to-load-path))
-               load-path)))
-    #+END_SRC
 
     Then we load up a couple packages:
     1. [[https://github.com/raxod502/straight.el][straight.el]] :: Fancy package manager
@@ -58,12 +48,12 @@
             (goto-char (point-max))
             (eval-print-last-sexp)))
         (load bootstrap-file nil 'nomessage))
-
       (straight-use-package 'use-package)
       (require 'use-package)
       (setq straight-use-package-by-default t)
       (require 'bind-key)
       (use-package org
+        :load-path "straight/repos/org"
         :bind ("C-c l" . 'org-store-link))
     #+END_SRC
 
@@ -215,3 +205,4 @@
 *** TODO make =(C-c C-l)= use file completion when =file:= is used
 *** TODO figure out how to quickly reindent code blocks
 *** TODO Figure out how to load org from straight before anything else
+*** TODO remove straight :(
