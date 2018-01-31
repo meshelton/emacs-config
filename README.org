@@ -123,7 +123,9 @@
         (require 'googlemenu)               ;; handy Google menu bar
         (require 'p4-files)                 ;; transparent support for Perforce filesystem
         (require 'google3-build)            ;; support for blaze builds
-        (require 'csearch))                 ;; Search the whole Google code base.
+        (require 'csearch)                  ;; Search the whole Google code base.
+        (require 'sql-dremel))              ;; run dremel queries through emacs
+
     #+END_SRC
 
 *** Appearance
@@ -200,9 +202,14 @@
                ("C-h w" . helm-descbinds)))
     #+END_SRC
 
+*** Format SQL
+    #+BEGIN_SRC emacs-lisp tangle:./init.el
+      (use-package format-sql)
+    #+END_SRC
 ** TODOs
 
 *** TODO make =(C-c C-l)= use file completion when =file:= is used
 *** TODO figure out how to quickly reindent code blocks
 *** TODO Figure out how to load org from straight before anything else
 *** TODO remove straight :(
+*** TODO Debug why <s[TAB] quick expansion isn't working
