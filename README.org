@@ -201,11 +201,6 @@
         :bind (("C-h b" . helm-descbinds)
                ("C-h w" . helm-descbinds)))
     #+END_SRC
-
-*** Format SQL
-    #+BEGIN_SRC emacs-lisp tangle:./init.el
-      (use-package format-sql)
-    #+END_SRC
 ** TODOs
 
 *** TODO make =(C-c C-l)= use file completion when =file:= is used
