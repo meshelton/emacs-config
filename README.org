@@ -201,6 +201,12 @@
         :bind (("C-h b" . helm-descbinds)
                ("C-h w" . helm-descbinds)))
     #+END_SRC
+
+*** sql-indent
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
+      (use-package sql-indent
+        :hook (sql-mode-hook . sqlind-minor-mode))
+    #+END_SRC
 ** TODOs
 
 *** TODO make =(C-c C-l)= use file completion when =file:= is used
@@ -208,3 +214,7 @@
 *** TODO Figure out how to load org from straight before anything else
 *** TODO remove straight :(
 *** TODO Debug why <s[TAB] quick expansion isn't working
+*** TODO Make a better SQL mode
+    [[https://www.emacswiki.org/emacs/ModeTutorial][emacswiki link for modes]]
+    [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][remacs guide to creating a major mode]]
+    
