@@ -1,39 +1,39 @@
-- [Emacs Initialization File](#org8417548)
-  - [Bootstrapping](#org36e3c29)
-    - [[init.el](init.el)](#orgc60f28f)
-    - [[README.org](README.md)](#org79dcd90)
-  - [Configuration](#orgcb08104)
-    - [Per System Configuration](#org0505952)
-    - [Personal Information](#org67b1846)
-    - [Backup](#orgb7eb07c)
-    - [Google specific emacs packages](#orgc69f974)
-    - [Appearance](#org89ca490)
-    - [Multiple Cursors](#org4930541)
-    - [Visual Regular Expressions](#org000cf9a)
-    - [Magit](#org560ad68)
-    - [Helm](#orga983076)
-  - [s](#orgd515c37)
-    - [make `(C-c C-l)` use file completion when `file:` is used](#orgc517963)
-    - [figure out how to quickly reindent code blocks](#org72904c2)
-    - [Figure out how to load org from straight before anything else](#org9caf568)
-    - [remove straight :(](#org8d3b473)
-    - [Debug why <s[TAB] quick expansion isn't working](#org44b46f1)
+- [Emacs Initialization File](#orgb1f02bf)
+  - [Bootstrapping](#orgab1b74d)
+    - [[init.el](init.el)](#org620af43)
+    - [[README.org](README.md)](#org57bd4cd)
+  - [Configuration](#org61f521f)
+    - [Per System Configuration](#orgc6842a5)
+    - [Personal Information](#org5b404a8)
+    - [Backup](#org9cb34a0)
+    - [Google specific emacs packages](#orgdd3af0a)
+    - [Appearance](#orgb687d4b)
+    - [Multiple Cursors](#org79214d9)
+    - [Visual Regular Expressions](#org249a0f4)
+    - [Magit](#org59e404c)
+    - [Helm](#org3016718)
+  - [s](#org16a52c4)
+    - [make `(C-c C-l)` use file completion when `file:` is used](#org6fe5a1c)
+    - [figure out how to quickly reindent code blocks](#org59aecc6)
+    - [remove straight :(](#org4850f4e)
+    - [Debug why <s[TAB] quick expansion isn't working](#org02c710b)
+    - [Figure out better way to load use-package the first time](#org2f00402)
 
 
 
-<a id="org8417548"></a>
+<a id="orgb1f02bf"></a>
 
 # Emacs Initialization File
 
 
-<a id="org36e3c29"></a>
+<a id="orgab1b74d"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="orgc60f28f"></a>
+<a id="org620af43"></a>
 
 ### [init.el](init.el)
 
@@ -59,7 +59,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="org79dcd90"></a>
+<a id="org57bd4cd"></a>
 
 ### [README.org](README.md)
 
@@ -67,28 +67,24 @@ This is where the main configuration goes. Any code blocks that have the `:tangl
 
 Then we load up a couple packages:
 
-1.  [straight.el](https://github.com/raxod502/straight.el) :: Fancy package manager
-2.  [use-package](https://github.com/jwiegley/use-package) :: A nicer package configuration framework
-3.  [org-mode](https://orgmode.org/) :: A package for literate programming and so much more
+1.  [use-package](https://github.com/jwiegley/use-package) :: A nicer package configuration framework
+2.  [org-mode](https://orgmode.org/) :: A package for literate programming and so much more
 
 ```emacs-lisp
-(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-      (bootstrap-version 3))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-(straight-use-package 'use-package)
+(require 'package)
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("marmalade" . "https://marmalade-repo.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")))
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
 (require 'use-package)
-(setq straight-use-package-by-default t)
-(require 'bind-key)
+(setq use-package-always-ensure t)
 (use-package org
-  :load-path "straight/repos/org"
-  :bind ("C-c l" . 'org-store-link))
+             :bind ("C-c l" . 'org-store-link))
 ```
 
 Subsequent init.el generations are through this `after-save-hook` on [README.org](README.md)
@@ -121,12 +117,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgcb08104"></a>
+<a id="org61f521f"></a>
 
 ## Configuration
 
 
-<a id="org0505952"></a>
+<a id="orgc6842a5"></a>
 
 ### Per System Configuration
 
@@ -138,7 +134,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org67b1846"></a>
+<a id="org5b404a8"></a>
 
 ### Personal Information
 
@@ -150,7 +146,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgb7eb07c"></a>
+<a id="org9cb34a0"></a>
 
 ### Backup
 
@@ -164,7 +160,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgc69f974"></a>
+<a id="orgdd3af0a"></a>
 
 ### Google specific emacs packages
 
@@ -184,7 +180,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org89ca490"></a>
+<a id="orgb687d4b"></a>
 
 ### Appearance
 
@@ -202,7 +198,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org4930541"></a>
+<a id="org79214d9"></a>
 
 ### Multiple Cursors
 
@@ -215,7 +211,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org000cf9a"></a>
+<a id="org249a0f4"></a>
 
 ### Visual Regular Expressions
 
@@ -228,7 +224,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org560ad68"></a>
+<a id="org59e404c"></a>
 
 ### Magit
 
@@ -238,7 +234,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orga983076"></a>
+<a id="org3016718"></a>
 
 ### Helm
 
@@ -274,35 +270,35 @@ We also add an after save hook to automatically generate a new [README.md](READM
 (use-package helm-descbinds
   :defer t
   :bind (("C-h b" . helm-descbinds)
-         ("C-h w" . helm-descbinds)))
+         ("C-h w" . helm-descbinds))) 
 ```
 
 
-<a id="orgd515c37"></a>
+<a id="org16a52c4"></a>
 
 ## TODO s
 
 
-<a id="orgc517963"></a>
+<a id="org6fe5a1c"></a>
 
 ### TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="org72904c2"></a>
+<a id="org59aecc6"></a>
 
 ### TODO figure out how to quickly reindent code blocks
 
 
-<a id="org9caf568"></a>
+<a id="org4850f4e"></a>
 
-### TODO Figure out how to load org from straight before anything else
-
-
-<a id="org8d3b473"></a>
-
-### TODO remove straight :(
+### DONE remove straight :(
 
 
-<a id="org44b46f1"></a>
+<a id="org02c710b"></a>
 
 ### TODO Debug why <s[TAB] quick expansion isn't working
+
+
+<a id="org2f00402"></a>
+
+### TODO Figure out better way to load use-package the first time
