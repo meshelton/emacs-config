@@ -1,41 +1,42 @@
-- [Emacs Initialization File](#orga710479)
-  - [Bootstrapping](#org10f3aa2)
-    - [[init.el](init.el)](#org065a8a5)
-    - [[README.org](README.md)](#orgdb7a693)
-  - [Configuration](#org1dbe730)
-    - [Per System Configuration](#org49017a2)
-    - [Personal Information](#org0910272)
-    - [Backup](#orgdb99782)
-    - [Google specific emacs packages](#org93f68a1)
-    - [Appearance](#orgd9fe9a5)
-    - [Multiple Cursors](#org9d55946)
-    - [Visual Regular Expressions](#org6f12e44)
-    - [Magit](#orgc96475c)
-    - [Helm](#org6769a3f)
-    - [sql-indent](#orgdce76ca)
-  - [s](#org8746636)
-    - [make `(C-c C-l)` use file completion when `file:` is used](#orga385d01)
-    - [figure out how to quickly reindent code blocks](#org80ac9c3)
-    - [Figure out how to load org from straight before anything else](#org5f7980d)
-    - [remove straight :(](#orgc8cc275)
-    - [Debug why <s[TAB] quick expansion isn't working](#org03244ec)
-    - [Make a better SQL mode](#orgbc820a5)
+- [Emacs Initialization File](#org15e33c0)
+  - [Bootstrapping](#org27ab663)
+    - [[init.el](init.el)](#orgee2407c)
+    - [[README.org](README.md)](#org4485ad8)
+  - [Configuration](#org65bd113)
+    - [Per System Configuration](#org6fcd0e4)
+    - [Personal Information](#org7b6ebcb)
+    - [Backup](#org44efafe)
+    - [Google specific emacs packages](#orgd07bce4)
+    - [Appearance](#orgb0a4377)
+    - [Multiple Cursors](#org19900da)
+    - [Visual Regular Expressions](#org7842db0)
+    - [Magit](#org8c1cf0c)
+    - [Helm](#org854561f)
+    - [sql-indent](#orgfab2b1c)
+  - [s](#orgdd04258)
+    - [make `(C-c C-l)` use file completion when `file:` is used](#orga654125)
+    - [figure out how to quickly reindent code blocks](#org97be2c3)
+    - [remove straight :(](#orgba87c70)
+    - [Debug why <s[TAB] quick expansion isn't working](#org7f05b25)
+    - [Make a better SQL mode](#org9c32221)
+    - [Figure out better way to load use-package the first time](#org72737fb)
+    - [Find better way of storing github.com secret access token](#org4f83ac8)
 
 
 
-<a id="orga710479"></a>
+<a id="org15e33c0"></a>
 
 # Emacs Initialization File
 
 
-<a id="org10f3aa2"></a>
+<a id="org27ab663"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org065a8a5"></a>
+<a id="orgee2407c"></a>
 
 ### [init.el](init.el)
 
@@ -61,7 +62,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="orgdb7a693"></a>
+<a id="org4485ad8"></a>
 
 ### [README.org](README.md)
 
@@ -69,28 +70,24 @@ This is where the main configuration goes. Any code blocks that have the `:tangl
 
 Then we load up a couple packages:
 
-1.  [straight.el](https://github.com/raxod502/straight.el) :: Fancy package manager
-2.  [use-package](https://github.com/jwiegley/use-package) :: A nicer package configuration framework
-3.  [org-mode](https://orgmode.org/) :: A package for literate programming and so much more
+1.  [use-package](https://github.com/jwiegley/use-package) :: A nicer package configuration framework
+2.  [org-mode](https://orgmode.org/) :: A package for literate programming and so much more
 
 ```emacs-lisp
-(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-      (bootstrap-version 3))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-(straight-use-package 'use-package)
+(require 'package)
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("marmalade" . "https://marmalade-repo.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")))
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
 (require 'use-package)
-(setq straight-use-package-by-default t)
-(require 'bind-key)
+(setq use-package-always-ensure t)
 (use-package org
-  :load-path "straight/repos/org"
-  :bind ("C-c l" . 'org-store-link))
+             :bind ("C-c l" . 'org-store-link))
 ```
 
 Subsequent init.el generations are through this `after-save-hook` on [README.org](README.md)
@@ -123,12 +120,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org1dbe730"></a>
+<a id="org65bd113"></a>
 
 ## Configuration
 
 
-<a id="org49017a2"></a>
+<a id="org6fcd0e4"></a>
 
 ### Per System Configuration
 
@@ -140,7 +137,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org0910272"></a>
+<a id="org7b6ebcb"></a>
 
 ### Personal Information
 
@@ -152,7 +149,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgdb99782"></a>
+<a id="org44efafe"></a>
 
 ### Backup
 
@@ -166,7 +163,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org93f68a1"></a>
+<a id="orgd07bce4"></a>
 
 ### Google specific emacs packages
 
@@ -186,7 +183,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgd9fe9a5"></a>
+<a id="orgb0a4377"></a>
 
 ### Appearance
 
@@ -204,7 +201,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org9d55946"></a>
+<a id="org19900da"></a>
 
 ### Multiple Cursors
 
@@ -217,7 +214,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org6f12e44"></a>
+<a id="org7842db0"></a>
 
 ### Visual Regular Expressions
 
@@ -230,7 +227,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgc96475c"></a>
+<a id="org8c1cf0c"></a>
 
 ### Magit
 
@@ -240,7 +237,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org6769a3f"></a>
+<a id="org854561f"></a>
 
 ### Helm
 
@@ -276,11 +273,11 @@ We also add an after save hook to automatically generate a new [README.md](READM
 (use-package helm-descbinds
   :defer t
   :bind (("C-h b" . helm-descbinds)
-         ("C-h w" . helm-descbinds)))
+         ("C-h w" . helm-descbinds))) 
 ```
 
 
-<a id="orgdce76ca"></a>
+<a id="orgfab2b1c"></a>
 
 ### sql-indent
 
@@ -290,38 +287,43 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org8746636"></a>
+<a id="orgdd04258"></a>
 
 ## TODO s
 
 
-<a id="orga385d01"></a>
+<a id="orga654125"></a>
 
 ### TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="org80ac9c3"></a>
+<a id="org97be2c3"></a>
 
 ### TODO figure out how to quickly reindent code blocks
 
 
-<a id="org5f7980d"></a>
+<a id="orgba87c70"></a>
 
-### TODO Figure out how to load org from straight before anything else
-
-
-<a id="orgc8cc275"></a>
-
-### TODO remove straight :(
+### DONE remove straight :(
 
 
-<a id="org03244ec"></a>
+<a id="org7f05b25"></a>
 
 ### TODO Debug why <s[TAB] quick expansion isn't working
 
 
-<a id="orgbc820a5"></a>
+<a id="org9c32221"></a>
 
 ### TODO Make a better SQL mode
 
 [emacswiki link for modes](https://www.emacswiki.org/emacs/ModeTutorial) [remacs guide to creating a major mode](http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/)
+
+
+<a id="org72737fb"></a>
+
+### TODO Figure out better way to load use-package the first time
+
+
+<a id="org4f83ac8"></a>
+
+### TODO Find better way of storing github.com secret access token
