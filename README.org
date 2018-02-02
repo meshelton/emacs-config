@@ -204,3 +204,4 @@
 *** DONE remove straight :(
 *** TODO Debug why <s[TAB] quick expansion isn't working
 *** TODO Figure out better way to load use-package the first time 
+*** TODO Find better way of storing github.com secret access token

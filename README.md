@@ -1,39 +1,40 @@
-- [Emacs Initialization File](#orgb1f02bf)
-  - [Bootstrapping](#orgab1b74d)
-    - [[init.el](init.el)](#org620af43)
-    - [[README.org](README.md)](#org57bd4cd)
-  - [Configuration](#org61f521f)
-    - [Per System Configuration](#orgc6842a5)
-    - [Personal Information](#org5b404a8)
-    - [Backup](#org9cb34a0)
-    - [Google specific emacs packages](#orgdd3af0a)
-    - [Appearance](#orgb687d4b)
-    - [Multiple Cursors](#org79214d9)
-    - [Visual Regular Expressions](#org249a0f4)
-    - [Magit](#org59e404c)
-    - [Helm](#org3016718)
-  - [s](#org16a52c4)
-    - [make `(C-c C-l)` use file completion when `file:` is used](#org6fe5a1c)
-    - [figure out how to quickly reindent code blocks](#org59aecc6)
-    - [remove straight :(](#org4850f4e)
-    - [Debug why <s[TAB] quick expansion isn't working](#org02c710b)
-    - [Figure out better way to load use-package the first time](#org2f00402)
+- [Emacs Initialization File](#org4dda858)
+  - [Bootstrapping](#orgd283e6f)
+    - [[init.el](init.el)](#org90f4d2b)
+    - [[README.org](README.md)](#org9820bf1)
+  - [Configuration](#org7fbbade)
+    - [Per System Configuration](#org03e74e8)
+    - [Personal Information](#org288c03f)
+    - [Backup](#org6f4938b)
+    - [Google specific emacs packages](#orgfb47680)
+    - [Appearance](#orgf978bdd)
+    - [Multiple Cursors](#org61590da)
+    - [Visual Regular Expressions](#org33aee57)
+    - [Magit](#org92c1d1f)
+    - [Helm](#org08e3e41)
+  - [s](#org0fd8f7c)
+    - [make `(C-c C-l)` use file completion when `file:` is used](#org5e0a05e)
+    - [figure out how to quickly reindent code blocks](#org294ac2c)
+    - [remove straight :(](#org6b910e3)
+    - [Debug why <s[TAB] quick expansion isn't working](#org2f9111f)
+    - [Figure out better way to load use-package the first time](#org044f05e)
+    - [Find better way of storing github.com secret access token](#orgbcd1ae2)
 
 
 
-<a id="orgb1f02bf"></a>
+<a id="org4dda858"></a>
 
 # Emacs Initialization File
 
 
-<a id="orgab1b74d"></a>
+<a id="orgd283e6f"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org620af43"></a>
+<a id="org90f4d2b"></a>
 
 ### [init.el](init.el)
 
@@ -59,7 +60,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="org57bd4cd"></a>
+<a id="org9820bf1"></a>
 
 ### [README.org](README.md)
 
@@ -117,12 +118,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org61f521f"></a>
+<a id="org7fbbade"></a>
 
 ## Configuration
 
 
-<a id="orgc6842a5"></a>
+<a id="org03e74e8"></a>
 
 ### Per System Configuration
 
@@ -134,7 +135,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org5b404a8"></a>
+<a id="org288c03f"></a>
 
 ### Personal Information
 
@@ -146,7 +147,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org9cb34a0"></a>
+<a id="org6f4938b"></a>
 
 ### Backup
 
@@ -160,7 +161,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgdd3af0a"></a>
+<a id="orgfb47680"></a>
 
 ### Google specific emacs packages
 
@@ -180,7 +181,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgb687d4b"></a>
+<a id="orgf978bdd"></a>
 
 ### Appearance
 
@@ -198,7 +199,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org79214d9"></a>
+<a id="org61590da"></a>
 
 ### Multiple Cursors
 
@@ -211,7 +212,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org249a0f4"></a>
+<a id="org33aee57"></a>
 
 ### Visual Regular Expressions
 
@@ -224,7 +225,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org59e404c"></a>
+<a id="org92c1d1f"></a>
 
 ### Magit
 
@@ -234,7 +235,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org3016718"></a>
+<a id="org08e3e41"></a>
 
 ### Helm
 
@@ -274,31 +275,36 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org16a52c4"></a>
+<a id="org0fd8f7c"></a>
 
 ## TODO s
 
 
-<a id="org6fe5a1c"></a>
+<a id="org5e0a05e"></a>
 
 ### TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="org59aecc6"></a>
+<a id="org294ac2c"></a>
 
 ### TODO figure out how to quickly reindent code blocks
 
 
-<a id="org4850f4e"></a>
+<a id="org6b910e3"></a>
 
 ### DONE remove straight :(
 
 
-<a id="org02c710b"></a>
+<a id="org2f9111f"></a>
 
 ### TODO Debug why <s[TAB] quick expansion isn't working
 
 
-<a id="org2f00402"></a>
+<a id="org044f05e"></a>
 
 ### TODO Figure out better way to load use-package the first time
+
+
+<a id="orgbcd1ae2"></a>
+
+### TODO Find better way of storing github.com secret access token
