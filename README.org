@@ -88,6 +88,10 @@
         (interactive)
         "Return true if the system we are running is my work desktop at Google"
         (string-equal (system-name) "meshelton.nyc.corp.google.com"))
+      (defun system-is-home-desktop ()
+        (interactive)
+        "Return true if the system we are running is my personal desktop"
+        (string-equal (system-name) "DESKTOP-C2EK1OP"))
     #+END_SRC
 
 *** Personal Information
@@ -203,6 +207,18 @@
       (use-package sql-indent
         :hook (sql-mode-hook . sqlind-minor-mode))
     #+END_SRC
+
+*** Org Mode Tweaks
+    First we want to define where on the computer our google drive folder is located:
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
+      (defvar google-drive-dir
+        (cond ((system-is-home-desktop) "/mnt/c/Users/micha/Google Drive/Org/"))
+        "The location of google drive on this system")
+
+      (setq initial-buffer-choice google-drive-dir)
+    #+END_SRC
+
+
 ** TODOs
 
 *** TODO make =(C-c C-l)= use file completion when =file:= is used
