@@ -1,43 +1,43 @@
-- [Emacs Initialization File](#org37d1be4)
-  - [Bootstrapping](#orgd726142)
-    - [[init.el](init.el)](#orgc2e551a)
-    - [[README.org](README.md)](#org1f3f907)
-  - [Configuration](#orgc0e0d0f)
-    - [Per System Configuration](#orgf37050f)
-    - [Personal Information](#orga19da4b)
-    - [Backup](#orge151edc)
-    - [Google specific emacs packages](#orga709477)
-    - [Appearance](#org5774a8b)
-    - [Multiple Cursors](#org2ec2bdf)
-    - [Visual Regular Expressions](#org8a3c495)
-    - [Magit](#org3a631a1)
-    - [Helm](#orgdb3aaf4)
-    - [sql-indent](#orgefe3895)
-    - [Org Mode Tweaks](#org0716371)
-  - [s](#org4842ebb)
-    - [make `(C-c C-l)` use file completion when `file:` is used](#orgc28d331)
-    - [figure out how to quickly reindent code blocks](#org921ca8b)
-    - [remove straight :(](#org863ef95)
-    - [Debug why <s[TAB] quick expansion isn't working](#org3bfc41b)
-    - [Make a better SQL mode](#org438eeed)
-    - [Figure out better way to load use-package the first time](#org9063d90)
-    - [Find better way of storing github.com secret access token](#org2dd7279)
+- [Emacs Initialization File](#org871a90e)
+  - [Bootstrapping](#org4e47def)
+    - [[init.el](init.el)](#org0a0f8e2)
+    - [[README.org](README.md)](#orgf88f30b)
+  - [Configuration](#orgee31601)
+    - [Per System Configuration](#orgc2638f2)
+    - [Personal Information](#org472fd91)
+    - [Backup](#org274e32a)
+    - [Google specific emacs packages](#orgd8ad416)
+    - [Appearance](#orgdf5b777)
+    - [Multiple Cursors](#org4fbd92c)
+    - [Visual Regular Expressions](#org683dd77)
+    - [Magit](#orgc9580d0)
+    - [Helm](#orgd226405)
+    - [sql-indent](#orga2297a6)
+    - [Org Mode Tweaks](#orgcbdcce2)
+  - [s](#org01a8b79)
+    - [make `(C-c C-l)` use file completion when `file:` is used](#org9135cd5)
+    - [figure out how to quickly reindent code blocks](#orgb259713)
+    - [remove straight :(](#org7c58738)
+    - [Debug why <s[TAB] quick expansion isn't working](#orgab344ce)
+    - [Make a better SQL mode](#orgdc2a947)
+    - [Figure out better way to load use-package the first time](#orgbd74a51)
+    - [Find better way of storing github.com secret access token](#org0f69edc)
 
 
 
-<a id="org37d1be4"></a>
+<a id="org871a90e"></a>
 
 # Emacs Initialization File
 
 
-<a id="orgd726142"></a>
+<a id="org4e47def"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="orgc2e551a"></a>
+<a id="org0a0f8e2"></a>
 
 ### [init.el](init.el)
 
@@ -63,7 +63,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="org1f3f907"></a>
+<a id="orgf88f30b"></a>
 
 ### [README.org](README.md)
 
@@ -121,12 +121,12 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgc0e0d0f"></a>
+<a id="orgee31601"></a>
 
 ## Configuration
 
 
-<a id="orgf37050f"></a>
+<a id="orgc2638f2"></a>
 
 ### Per System Configuration
 
@@ -142,7 +142,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orga19da4b"></a>
+<a id="org472fd91"></a>
 
 ### Personal Information
 
@@ -154,7 +154,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orge151edc"></a>
+<a id="org274e32a"></a>
 
 ### Backup
 
@@ -168,7 +168,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orga709477"></a>
+<a id="orgd8ad416"></a>
 
 ### Google specific emacs packages
 
@@ -188,7 +188,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org5774a8b"></a>
+<a id="orgdf5b777"></a>
 
 ### Appearance
 
@@ -206,7 +206,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org2ec2bdf"></a>
+<a id="org4fbd92c"></a>
 
 ### Multiple Cursors
 
@@ -219,7 +219,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org8a3c495"></a>
+<a id="org683dd77"></a>
 
 ### Visual Regular Expressions
 
@@ -232,7 +232,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org3a631a1"></a>
+<a id="orgc9580d0"></a>
 
 ### Magit
 
@@ -242,7 +242,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgdb3aaf4"></a>
+<a id="orgd226405"></a>
 
 ### Helm
 
@@ -282,7 +282,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgefe3895"></a>
+<a id="orga2297a6"></a>
 
 ### sql-indent
 
@@ -292,58 +292,62 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org0716371"></a>
+<a id="orgcbdcce2"></a>
 
 ### Org Mode Tweaks
 
-First we want to define where on the computer our google drive folder is located:
+First we set up org to use our google drive as a working directory
 
 ```emacs-lisp
 (defvar google-drive-dir
-  (cond ((system-is-home-desktop) "/mnt/c/Users/micha/Google Drive/Org/"))
+  (cond ((system-is-home-desktop) "/mnt/c/Users/micha/Google Drive/"))
   "The location of google drive on this system")
 
-(setq initial-buffer-choice google-drive-dir)
+(setq org-directory (concat google-drive-dir "Org/"))
+
+(setq initial-buffer-choice org-directory)
+
+(setq org-agenda-files (list org-directory))
 ```
 
 
-<a id="org4842ebb"></a>
+<a id="org01a8b79"></a>
 
 ## TODO s
 
 
-<a id="orgc28d331"></a>
+<a id="org9135cd5"></a>
 
 ### TODO make `(C-c C-l)` use file completion when `file:` is used
 
 
-<a id="org921ca8b"></a>
+<a id="orgb259713"></a>
 
 ### TODO figure out how to quickly reindent code blocks
 
 
-<a id="org863ef95"></a>
+<a id="org7c58738"></a>
 
 ### DONE remove straight :(
 
 
-<a id="org3bfc41b"></a>
+<a id="orgab344ce"></a>
 
 ### TODO Debug why <s[TAB] quick expansion isn't working
 
 
-<a id="org438eeed"></a>
+<a id="orgdc2a947"></a>
 
 ### TODO Make a better SQL mode
 
 [emacswiki link for modes](https://www.emacswiki.org/emacs/ModeTutorial) [remacs guide to creating a major mode](http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/)
 
 
-<a id="org9063d90"></a>
+<a id="orgbd74a51"></a>
 
 ### TODO Figure out better way to load use-package the first time
 
 
-<a id="org2dd7279"></a>
+<a id="org0f69edc"></a>
 
 ### TODO Find better way of storing github.com secret access token

@@ -209,13 +209,17 @@
     #+END_SRC
 
 *** Org Mode Tweaks
-    First we want to define where on the computer our google drive folder is located:
+    First we set up org to use our google drive as a working directory
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (defvar google-drive-dir
-        (cond ((system-is-home-desktop) "/mnt/c/Users/micha/Google Drive/Org/"))
+        (cond ((system-is-home-desktop) "/mnt/c/Users/micha/Google Drive/"))
         "The location of google drive on this system")
 
-      (setq initial-buffer-choice google-drive-dir)
+      (setq org-directory (concat google-drive-dir "Org/"))
+
+      (setq initial-buffer-choice org-directory)
+
+      (setq org-agenda-files (list org-directory))
     #+END_SRC
 
 
