@@ -1,6 +1,5 @@
 #+TITLE: Michael Shelton's Emacs configuration
 #+OPTIONS: toc:4 h:4
-#+STARTUP: showeverything
  
 * Emacs Initialization File
  
@@ -164,6 +163,7 @@
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (use-package magit
         :bind ("C-x g" . 'magit-status))
+
     #+END_SRC
 
 *** Helm
@@ -208,6 +208,11 @@
         :hook (sql-mode-hook . sqlind-minor-mode))
     #+END_SRC
 
+*** string-inflection
+    #+BEGIN_SRC emacs-lisp :tangle ./init.el
+      (use-package string-inflection
+        :bind ("C-c i" . 'string-inflection-cycle))
+    #+END_SRC
 *** Org Mode Tweaks
     First we set up org to use our google drive as a working directory
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
