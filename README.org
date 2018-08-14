@@ -91,6 +91,10 @@
         (interactive)
         "Return true if the system we are running is my personal desktop"
         (string-equal (system-name) "DESKTOP-C2EK1OP"))
+      (defun system-is-indify-laptop ()
+        (interactive)
+        "Return true if the system we are running is my indify laptop"
+        (string-equal (system-name) "MacBook-Pro-3.local"))
     #+END_SRC
 
 *** Personal Information
@@ -99,6 +103,8 @@
             user-mail-address "michael.e.shelton@gmail.com")
       (if (system-is-workstation)
           (setq user-mail-address "meshelton@google.com"))
+      (if (system-is-indify-laptop)
+          (setq user-mail-address "michael@indify.io"))
     #+END_SRC
 
 *** Backup
