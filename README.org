@@ -91,6 +91,10 @@
         (interactive)
         "Return true if the system we are running is my personal desktop"
         (string-equal (system-name) "DESKTOP-C2EK1OP"))
+      (defun system-is-home-desktop-wsl ()
+        (interactive)
+        "Return true if the system we are running is my personal desktop"
+        (string-equal (system-name) "DESKTOP-6PNIEF5"))
       (defun system-is-indify-laptop ()
         (interactive)
         "Return true if the system we are running is my indify laptop"
@@ -101,8 +105,6 @@
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (setq user-full-name "Michael Shelton"
             user-mail-address "michael.e.shelton@gmail.com")
-      (if (system-is-workstation)
-          (setq user-mail-address "meshelton@google.com"))
       (if (system-is-indify-laptop)
           (setq user-mail-address "michael@indify.io"))
     #+END_SRC
@@ -115,22 +117,6 @@
       (setq vc-make-backup-files t)
       (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
       (setq backup-by-copying t)
-    #+END_SRC
-
-*** Google specific emacs packages
-    #+BEGIN_SRC emacs-lisp :tangle ./init.el
-      (when (system-is-workstation)
-        (require 'google)
-        (require 'p4-google)                ;; g4-annotate, improves find-file-at-point
-        (require 'compilation-colorization) ;; colorizes output of (i)grep
-        (require 'rotate-clients)           ;; google-rotate-client
-        (require 'rotate-among-files)       ;; google-rotate-among-files
-        (require 'googlemenu)               ;; handy Google menu bar
-        (require 'p4-files)                 ;; transparent support for Perforce filesystem
-        (require 'google3-build)            ;; support for blaze builds
-        (require 'csearch)                  ;; Search the whole Google code base.
-        (require 'sql-dremel))              ;; run dremel queries through emacs
-
     #+END_SRC
 
 *** Appearance
@@ -172,76 +158,12 @@
 
     #+END_SRC
 
-*** Helm
-    #+BEGIN_SRC emacs-lisp :tangle ./init.el
-      (use-package helm
-        :diminish helm-mode
-        :init
-        (progn
-          (require 'helm-config)
-          (setq helm-candidate-number-limit 100)
-          ;; From https://gist.github.com/antifuchs/9238468
-          (setq helm-idle-delay 0.0 ; update fast sources immediately (doesn't).
-                helm-input-idle-delay 0.01  ; this actually updates things
-                                              ; reeeelatively quickly.
-                helm-yas-display-key-on-candidate t
-                helm-quick-update t
-                helm-M-x-requires-pattern nil
-                helm-ff-skip-boring-files t)
-          (helm-mode))
-        :bind (("C-c h" . helm-mini)
-               ("C-h a" . helm-apropos)
-               ("C-x C-b" . helm-buffers-list)
-               ("C-x b" . helm-buffers-list)
-               ("M-y" . helm-show-kill-ring)
-               ("M-x" . helm-M-x)
-               ("C-x c o" . helm-occur)
-               ("C-x c s" . helm-swoop)
-               ("C-x c y" . helm-yas-complete)
-               ("C-x c Y" . helm-yas-create-snippet-on-region)
-               ("C-x c b" . my/helm-do-grep-book-notes)
-               ("C-x c SPC" . helm-all-mark-rings)))
-
-      (use-package helm-descbinds
-        :defer t
-        :bind (("C-h b" . helm-descbinds)
-               ("C-h w" . helm-descbinds))) 
-    #+END_SRC
-
-*** sql-indent
-    #+BEGIN_SRC emacs-lisp :tangle ./init.el
-      (use-package sql-indent
-        :hook (sql-mode-hook . sqlind-minor-mode))
-    #+END_SRC
 
 *** string-inflection
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (use-package string-inflection
         :bind ("C-c i" . 'string-inflection-cycle))
     #+END_SRC
-*** Org Mode Tweaks
-    First we set up org to use our google drive as a working directory
-    #+BEGIN_SRC emacs-lisp :tangle ./init.el
-      (defvar google-drive-dir
-        (cond ((system-is-home-desktop) "/mnt/c/Users/micha/Google Drive/"))
-        "The location of google drive on this system")
-
-      (setq org-directory (concat google-drive-dir "Org/"))
-
-      (setq initial-buffer-choice org-directory)
-
-      (setq org-agenda-files (list org-directory))
-    #+END_SRC
-
 
 ** TODOs
 
-*** TODO make =(C-c C-l)= use file completion when =file:= is used
-*** TODO figure out how to quickly reindent code blocks
-*** DONE remove straight :(
-*** TODO Debug why <s[TAB] quick expansion isn't working
-*** TODO Make a better SQL mode
-    [[https://www.emacswiki.org/emacs/ModeTutorial][emacswiki link for modes]]
-    [[http://www.wilfred.me.uk/blog/2015/03/19/adding-a-new-language-to-emacs/][remacs guide to creating a major mode]]
-*** TODO Figure out better way to load use-package the first time 
-*** TODO Find better way of storing github.com secret access token
