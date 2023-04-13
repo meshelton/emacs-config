@@ -83,10 +83,6 @@
 
 *** Per System Configuration
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
-      (defun system-is-workstation ()
-        (interactive)
-        "Return true if the system we are running is my work desktop at Google"
-        (string-equal (system-name) "meshelton.nyc.corp.google.com"))
       (defun system-is-home-desktop ()
         (interactive)
         "Return true if the system we are running is my personal desktop"
@@ -95,18 +91,12 @@
         (interactive)
         "Return true if the system we are running is my personal desktop"
         (string-equal (system-name) "DESKTOP-6PNIEF5"))
-      (defun system-is-indify-laptop ()
-        (interactive)
-        "Return true if the system we are running is my indify laptop"
-        (string-equal (system-name) "MacBook-Pro-3.local"))
     #+END_SRC
 
 *** Personal Information
     #+BEGIN_SRC emacs-lisp :tangle ./init.el
       (setq user-full-name "Michael Shelton"
             user-mail-address "michael.e.shelton@gmail.com")
-      (if (system-is-indify-laptop)
-          (setq user-mail-address "michael@indify.io"))
     #+END_SRC
 
 *** Backup

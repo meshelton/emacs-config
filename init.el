@@ -34,10 +34,6 @@ tangled, and the tangled file is compiled."
     (org-gfm-export-to-markdown)))
 (add-hook 'after-save-hook 'export-readme)
 
-(defun system-is-workstation ()
-  (interactive)
-  "Return true if the system we are running is my work desktop at Google"
-  (string-equal (system-name) "meshelton.nyc.corp.google.com"))
 (defun system-is-home-desktop ()
   (interactive)
   "Return true if the system we are running is my personal desktop"
@@ -46,15 +42,9 @@ tangled, and the tangled file is compiled."
   (interactive)
   "Return true if the system we are running is my personal desktop"
   (string-equal (system-name) "DESKTOP-6PNIEF5"))
-(defun system-is-indify-laptop ()
-  (interactive)
-  "Return true if the system we are running is my indify laptop"
-  (string-equal (system-name) "MacBook-Pro-3.local"))
 
 (setq user-full-name "Michael Shelton"
       user-mail-address "michael.e.shelton@gmail.com")
-(if (system-is-indify-laptop)
-    (setq user-mail-address "michael@indify.io"))
 
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
 (setq delete-old-versions -1)

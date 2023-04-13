@@ -1,33 +1,33 @@
-- [Emacs Initialization File](#orga471eeb)
-  - [Bootstrapping](#orgaf064ac)
-    - [[init.el](init.el)](#org3a8a9e8)
-    - [[README.org](README.md)](#orgf50da4b)
-  - [Configuration](#orgc83075d)
-    - [Per System Configuration](#orgde78b47)
-    - [Personal Information](#org324c803)
-    - [Backup](#org71bb7e0)
-    - [Appearance](#org104f571)
-    - [Multiple Cursors](#org031a121)
-    - [Visual Regular Expressions](#org1c9ceb4)
-    - [Magit](#org392be84)
-    - [string-inflection](#org7ac9f0c)
-  - [TODOs](#org4234c66)
+- [Emacs Initialization File](#org17c9198)
+  - [Bootstrapping](#org75d1e67)
+    - [[init.el](init.el)](#org49a21f1)
+    - [[README.org](README.md)](#org12648fa)
+  - [Configuration](#orga45f808)
+    - [Per System Configuration](#org98b4785)
+    - [Personal Information](#org328212e)
+    - [Backup](#orgdc32695)
+    - [Appearance](#org4a1ba77)
+    - [Multiple Cursors](#org7c7f452)
+    - [Visual Regular Expressions](#org59e5a59)
+    - [Magit](#orgb5b7dc1)
+    - [string-inflection](#orged38d85)
+  - [TODOs](#org8f3e842)
 
 
 
-<a id="orga471eeb"></a>
+<a id="org17c9198"></a>
 
 # Emacs Initialization File
 
 
-<a id="orgaf064ac"></a>
+<a id="org75d1e67"></a>
 
 ## Bootstrapping
 
 The endgoal here is to have an easily shareable, readable, and reproducable emacs setup. When you clone this repository you'll have two main files: [init.el](init.el) and [README.org](README.md).
 
 
-<a id="org3a8a9e8"></a>
+<a id="org49a21f1"></a>
 
 ### [init.el](init.el)
 
@@ -53,7 +53,7 @@ This is the entry point to the entire configuration process. When you first clon
 This code will load org mode, move specified code blocks from [README.org](README.md) to [init.el](init.el) and then byte compile it.
 
 
-<a id="orgf50da4b"></a>
+<a id="org12648fa"></a>
 
 ### [README.org](README.md)
 
@@ -111,20 +111,16 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="orgc83075d"></a>
+<a id="orga45f808"></a>
 
 ## Configuration
 
 
-<a id="orgde78b47"></a>
+<a id="org98b4785"></a>
 
 ### Per System Configuration
 
 ```emacs-lisp
-(defun system-is-workstation ()
-  (interactive)
-  "Return true if the system we are running is my work desktop at Google"
-  (string-equal (system-name) "meshelton.nyc.corp.google.com"))
 (defun system-is-home-desktop ()
   (interactive)
   "Return true if the system we are running is my personal desktop"
@@ -133,26 +129,20 @@ We also add an after save hook to automatically generate a new [README.md](READM
   (interactive)
   "Return true if the system we are running is my personal desktop"
   (string-equal (system-name) "DESKTOP-6PNIEF5"))
-(defun system-is-indify-laptop ()
-  (interactive)
-  "Return true if the system we are running is my indify laptop"
-  (string-equal (system-name) "MacBook-Pro-3.local"))
 ```
 
 
-<a id="org324c803"></a>
+<a id="org328212e"></a>
 
 ### Personal Information
 
 ```emacs-lisp
 (setq user-full-name "Michael Shelton"
       user-mail-address "michael.e.shelton@gmail.com")
-(if (system-is-indify-laptop)
-    (setq user-mail-address "michael@indify.io"))
 ```
 
 
-<a id="org71bb7e0"></a>
+<a id="orgdc32695"></a>
 
 ### Backup
 
@@ -166,7 +156,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org104f571"></a>
+<a id="org4a1ba77"></a>
 
 ### Appearance
 
@@ -184,7 +174,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org031a121"></a>
+<a id="org7c7f452"></a>
 
 ### Multiple Cursors
 
@@ -197,7 +187,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org1c9ceb4"></a>
+<a id="org59e5a59"></a>
 
 ### Visual Regular Expressions
 
@@ -210,7 +200,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org392be84"></a>
+<a id="orgb5b7dc1"></a>
 
 ### Magit
 
@@ -221,7 +211,7 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org7ac9f0c"></a>
+<a id="orged38d85"></a>
 
 ### string-inflection
 
@@ -231,6 +221,6 @@ We also add an after save hook to automatically generate a new [README.md](READM
 ```
 
 
-<a id="org4234c66"></a>
+<a id="org8f3e842"></a>
 
 ## TODOs
